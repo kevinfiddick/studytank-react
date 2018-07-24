@@ -1,0 +1,126 @@
+{
+  "_id": "1529293444795",
+  "_rev": "31-b83239b6e77d54c123ace0f52902fa92",
+  "title": "Dear Tyler",
+  "content": "Tyler,\nThis is a really awesome creation. I am so proud of you. You have created a foundation that has so much potential, and I know that you will continue to build this site into something even more outstanding. Study tank is dope!! I hope that after all of this hard work you reflect and take time for yourself to feel happy and proud over this accomplishment. \n\nI will forever be your biggest fan, (besides your mom and dad) and have & will always believe in you. You will always have left your mark on my heart, and always carry a friendship with me no matter what happens in our lives. I hope for you and I to both grow into something amazing, and I know we will. But with that comes a personal growth that only the individual can achieve. It's hard. And it hurts sometimes, but there is goodness that results from any struggle that an individual pursues from their heart. \n\nWe will see each other when we see each other, and maybe we will find out who we really are meant to be in the future. It's daunting, but exciting all at the same time. If we are really meant to kick ass in life together, it'll happen. Just like a guy finding a girl in a sea of 2,000 other people.\n\tWith love,\n\tMeg ",
+  "author": "megan.cote@marquette.edu",
+  "authorFirstname": "Megan",
+  "authorLastname": "Cote",
+  "authorPicture": "",
+  "subject": "Dear Tyler",
+  "school": "",
+  "date": "2018-06-17",
+  "isFact": "true",
+  "language": "EN",
+  "textbook": "",
+  "saved": [
+    "tyler@studytank.com",
+    "kevinfiddick@studytank.com",
+    "esparza.steven22@gmail.com",
+    "1529434903222",
+    "chase.gabriel@icloud.com"
+  ],
+  "comments": [
+    {
+      "id": "1529294136409",
+      "commentator": "tyler@studytank.com",
+      "commentatorFirstname": "Tyler",
+      "commentatorLastname": "Gottlieb",
+      "type": "question",
+      "body": "I wonder what future holds",
+      "date": "2018-06-17",
+      "likes": [
+        "kevinfiddick@studytank.com",
+        "megan.cote@marquette.edu"
+      ],
+      "replyTo": 0
+    },
+    {
+      "id": "1529294392352",
+      "commentator": "kevinfiddick@studytank.com",
+      "commentatorFirstname": "Kevin",
+      "commentatorLastname": "Fiddick",
+      "type": "suggestion",
+      "body": "This website is pretty cool, we should talk about how cool it is",
+      "date": "2018-06-17",
+      "likes": [],
+      "replyTo": 0
+    },
+    {
+      "id": "1529294457074",
+      "commentator": "tyler@studytank.com",
+      "commentatorFirstname": "Tyler",
+      "commentatorLastname": "Gottlieb",
+      "type": "reply",
+      "body": "i really wanna find the guys that made this and give them a piece of my mind ",
+      "date": "2018-06-17",
+      "likes": [
+        "kevinfiddick@studytank.com"
+      ],
+      "replyTo": "1529294392352"
+    },
+    {
+      "id": "1529375634735",
+      "commentator": "esparza.steven22@gmail.com",
+      "commentatorFirstname": "Steven",
+      "commentatorLastname": "Esparza",
+      "type": "comment",
+      "body": "This broke my heart. ",
+      "date": "2018-06-18",
+      "likes": [
+        "kevinfiddick@studytank.com",
+        "brenton@klimkosky.com"
+      ],
+      "replyTo": 0
+    },
+    {
+      "id": "1529440522845",
+      "commentator": "chase.gabriel@icloud.com",
+      "commentatorFirstname": "Chase",
+      "commentatorLastname": "Gabriel",
+      "type": "comment",
+      "body": "What an encouraging, yet heartbreaker comment! ❤️😅",
+      "date": "2018-06-19",
+      "likes": [
+        "kevinfiddick@studytank.com",
+        "zach.aussprung@gmail.com"
+      ],
+      "replyTo": 0
+    },
+    {
+      "id": 1530817490556,
+      "commentator": "zach.aussprung@gmail.com",
+      "commentatorFirstname": "Zachary",
+      "commentatorLastname": "Aussprung",
+      "type": "comment",
+      "body": "I'm confused ",
+      "date": "2018-07-05",
+      "likes": [],
+      "replyTo": 0
+    },
+    {
+      "id": "1530817540658",
+      "commentator": "brenton@klimkosky.com",
+      "commentatorFirstname": "brenton",
+      "commentatorLastname": "Klimkosky",
+      "type": "reply",
+      "body": "A tragedy ",
+      "date": "2018-07-05",
+      "likes": [
+        "zach.aussprung@gmail.com"
+      ],
+      "replyTo": "1529440522845"
+    }
+  ],
+  "rating": [
+    {
+      "uniqueID": "tyler@studytank.com",
+      "rating": 5
+    },
+    {
+      "uniqueID": "kevinfiddick@studytank.com",
+      "rating": 4
+    }
+  ],
+  "1529293444795": 1529293444795
+}
