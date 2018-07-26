@@ -2,6 +2,7 @@ import React from 'react';
 import ax from './api';
 import Button from '@material-ui/core/Button';
 import {Container, Row, Col} from "reactstrap";
+import sortBy from 'lodash/sortBy';
 import {Link} from 'react-router-dom';
 import './FilterList.css'
 import TextField from '@material-ui/core/TextField';
@@ -21,10 +22,12 @@ export default class FilterList extends React.Component {
 				followedGroups: [],
 		    items: [],
 				filteredItems: [],
-				unfilteredItems: [],
+				viewItems: [],
+				sortedItems: [],
 				username: '',
 				field: '',
-				siew: ''
+				view: 'all',
+				sort: 'date'
 	};
 
 	/**
@@ -32,17 +35,16 @@ export default class FilterList extends React.Component {
 	 *	This function is called when the "Filter" input box is changed
 	 *  This function will change the filter list to display only what
 	 *  matches user input.
-	 *  This function is performed on the second, and final layer of
-	 *  filtering.
+	 *  This function is performed on the final layer of the list.
 	 *  The first layer is determined by ON VIEW CHANGE and saved in
-	 *  state.unfilteredItems.
-	 *  The second layer (This one) is saved in state.filteredItems.
+	 *  state.viewItems
+	 *  The final layer (This one) is saved in state.filteredItems.
 	 *
-	**/
+	 */
 	onFilterInputChange(e){
 
-		var viewList = this.state.unfilteredItems;
-    var updatedList = viewList.filter(function(item){
+		const sortedList = this.state.sortedItems;
+    const updatedList = sortedList.filter(function(item){
       return item.value.title.toLowerCase().search(
         e.target.value.toLowerCase()) !== -1;
     });
@@ -57,23 +59,74 @@ export default class FilterList extends React.Component {
 	* - MY GROUPS
 	* - FOLLOWED GROUPS
 	*
- **/
+  */
 	onViewChange(e){
 		const view = e.target.value;
+		this.setState({ view: view });
+		console.log(view);
 
-		var originalList = this.state.items;
+		const originalList = this.state.items;
+		var newList = [];
 
-		const view = e.target.value;
 		switch (view){
 			case 'mygroups':
-					viewList = this.state.myGroups;
+					newList = this.state.myGroups;
+					break;
 			case 'followed':
-					viewList = this.state.followedGroups;
-			case 'All':
-					viewList = this.state.items;
+					newList = this.state.followedGroups;
+					break;
+			case 'all':
+					newList = this.state.items;
+					break;
 		}
-    this.setState({ unfilteredItems: updatedList });
-    this.setState({ filteredItems: updatedList });
+		console.log(this.state.followedGroups);
+
+    this.setState({ viewItems: newList });
+    this.setState({ filteredItems: newList });
+
+	}
+
+ /**
+	*	ON SELECT SORT CHANGE
+	*	This function is called when the "Sort By: " select box is changed
+	* This function will change the order of the filter list to one of the
+	* four options:
+	* - DATE ADDED
+	* - ALPHABETICAL
+	* - SUBJECT
+	* - SCHOOL
+	*
+  */
+	onSortChange(e){
+		const sort = e.target.value;
+		this.setState({ sort: sort });
+		console.log(sort);
+
+		const viewList = this.state.viewItems;
+		var sortedList = [];
+
+		switch (sort){
+			case 'date':
+					sortedList = viewList;
+					this.setState({ field: '' });
+					break;
+			case 'abc':
+					sortedList = sortBy(viewList, [function(group) { return group.value.title; }]);
+					this.setState({ field: '' });
+					break;
+			case 'subject':
+					sortedList = viewList
+					this.setState({ field: 'Subject: '});
+					break;
+			case 'school':
+					sortedList = viewList;
+					this.setState({ field: 'School: '});
+					break;
+		}
+		console.log(sortedList);
+
+		this.setState({ sortedItems: sortedList });
+    this.setState({ filteredItems: sortedList });
 	}
 
  /**
@@ -85,43 +138,45 @@ export default class FilterList extends React.Component {
 	* - FOLLOWED GROUPS
 	*/
 	componentWillMount() {
-
 		//TODO: catch param username (email address of user)
-		setGroups(){
-			ax.get('/' + 'group' + '/_design/dashboard/_view/' + props.view + '?key=\"' + 'user56@example.com' + '\"')
+
+		const setGroups = (view) => {
+			ax.get('/' + 'group' + '/_design/dashboard/_view/' + view + '?key=\"' + 'user56@example.com' + '\"')
 				.then(res => {
-						const addView = res.data.rows;
+						const viewArray = res.data.rows;
 						const itemsArray = this.state.items;
-						itemsArray.push.apply(itemsArray, addView);
-    				console.log(itemsArray);
-        		this.setState({ items: itemsArray });
-        		this.setState({ filteredItems: itemsArray });
-        		this.setState({ unfilteredItems: itemsArray });
-						switch(props.view) {
-    					case 'mygroups':
-      					this.setState({ myGroups: itemsArray });
-		    			case 'followed':
-		      			this.setState({ followedGroups: itemsArray });
-  					}
-    				console.log(this.state.items);
+						itemsArray.push.apply(itemsArray, viewArray);
+						this.setState({ items: itemsArray });
+						this.setState({ filteredItems: itemsArray });
+						this.setState({ viewItems: itemsArray });
+						switch(view) {
+							case 'mygroups':
+								this.setState({ myGroups: viewArray });
+							case 'followed':
+								this.setState({ followedGroups: viewArray });
+						}
 
 				});
 			}
-
-			setGroups('mygroups');
-			setGroups('followed');
+				setGroups('mygroups');
+				setGroups('followed');
+				console.log(this.state.followedGroups);
 
 	}
 
+	/**
+	 *	RENDER
+	 *	This Renders the List from "class List" with options to
+	 *  view and sort items, as well as a user input filter
+	 */
 	render() {
 		return(
 			<Container>
+				<br/>
 				<Row>
-					<Col md={{ size: 6, offset: 0 }} xs={{ size: 6, offset: 0 }}>
-
-					</Col>
-					<Col md={{ size: 6, offset: 0 }} xs={{ size: 6, offset: 0 }}>
-						<FormControl>
+					<Col md={{ size: 4, offset: 2 }} xs={{ size: 6, offset: 0 }}>
+						<FormControl
+						fullWidth>
         			<InputLabel htmlFor="view">View:</InputLabel>
           		<Select
             			value={this.state.view}
@@ -137,7 +192,27 @@ export default class FilterList extends React.Component {
             		<MenuItem value="mygroups">My Groups</MenuItem>
             		<MenuItem value="followed">Followed Groups</MenuItem>
           		</Select>
-          		<FormHelperText>View: My Groups, Followed Groups, or Both</FormHelperText>
+        		</FormControl>
+					</Col>
+					<Col md={{ size: 4, offset: 0 }} xs={{ size: 6, offset: 0 }}>
+						<FormControl
+						fullWidth>
+        			<InputLabel htmlFor="sort">Sort By:</InputLabel>
+          		<Select
+            			value={this.state.sort}
+            			onChange={this.onSortChange.bind(this)}
+            			name="sort"
+            			displayEmpty
+            			inputProps={{
+              			name: 'sort',
+              			id: 'sort',
+            			}}
+        			>
+            		<MenuItem value="date">Date Added</MenuItem>
+	            	<MenuItem value="abc">Alphabetical</MenuItem>
+            		<MenuItem value="subject">Subject</MenuItem>
+            		<MenuItem value="school">School</MenuItem>
+          		</Select>
         		</FormControl>
 					</Col>
 				</Row>
@@ -152,37 +227,25 @@ export default class FilterList extends React.Component {
 							onChange={this.onFilterInputChange.bind(this)}
 							fullWidth
         		/>
-      			<List items={this.state.filteredItems} field={this.state.field}/>
+
+							<ul>
+								{this.state.filteredItems.map(item =>
+									<Button
+										key={item.id}
+										variant="outlined"
+										color="primary"
+										className="button"
+										fullWidth
+									>
+										{<MyGroupIcon />}
+										{item.value.title} <br/>
+										{this.state.field}
+									</Button>
+								)}
+							</ul>
 					</Col>
 				</Row>
 			</Container>
     );
-	}
-}
-
-/**
- *	CLASS LIST
- *	This Class is called when FilterList is rendered.
- *  This Class will render the physical list from props.items (filteredItems)
- */
-class List extends React.Component {
-	render() {
-		return(
-			<ul>
-				{this.props.items.map(item =>
-					<Button
-						key={item.id}
-						variant="outlined"
-						color="primary"
-						className="button"
-						fullWidth
-					>
-						{<MyGroupIcon />}
-						{item.value.title}
-						{this.props.field == '' ? this.props.field : null}
-					</Button>
-				)}
-			</ul>
-		)
 	}
 }

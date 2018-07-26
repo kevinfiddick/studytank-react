@@ -4,6 +4,11 @@
   text-align: left;
 }
 
+.buttonLabel {
+  display: block;
+  text-align: left;
+}
+
 .filter {
   display: block;
   margin: 15px;

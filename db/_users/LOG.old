@@ -1,5 +1,5 @@
-2018/07/19-22:58:23.434 8b7c Recovering log #15
-2018/07/19-22:58:23.434 8b7c Level-0 table #18: started
-2018/07/19-22:58:23.442 8b7c Level-0 table #18: 287 bytes OK
-2018/07/19-22:58:23.458 8b7c Delete type=0 #15
-2018/07/19-22:58:23.459 8b7c Delete type=3 #13
+2018/07/25-19:02:55.705 6fe4 Recovering log #28
+2018/07/25-19:02:55.705 6fe4 Level-0 table #31: started
+2018/07/25-19:02:55.710 6fe4 Level-0 table #31: 287 bytes OK
+2018/07/25-19:02:55.724 6fe4 Delete type=0 #28
+2018/07/25-19:02:55.725 6fe4 Delete type=3 #26
