@@ -1,5 +1,5 @@
-2018/07/25-19:02:55.705 6fe4 Recovering log #28
-2018/07/25-19:02:55.705 6fe4 Level-0 table #31: started
-2018/07/25-19:02:55.710 6fe4 Level-0 table #31: 287 bytes OK
-2018/07/25-19:02:55.724 6fe4 Delete type=0 #28
-2018/07/25-19:02:55.725 6fe4 Delete type=3 #26
+2018/08/11-12:02:19.446 99a8 Recovering log #61
+2018/08/11-12:02:19.446 99a8 Level-0 table #63: started
+2018/08/11-12:02:19.451 99a8 Level-0 table #63: 287 bytes OK
+2018/08/11-12:02:19.468 99a8 Delete type=0 #61
+2018/08/11-12:02:19.469 99a8 Delete type=3 #59

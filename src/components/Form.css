@@ -1,0 +1,31 @@
+  .container {
+    min-width: 400px;
+  }
+  .paper {
+    height: 30px;
+  }
+  .joinedtextField {
+    width: 38%;
+  }
+  .textField {
+    width: 76%;
+  }
+  .fullWidth {
+    width: 100%;
+  }
+  .menu {
+    margin: 50px auto;
+  }
+  .root {
+    margin: 50px auto;
+    display: inline-block;
+    padding: 20px;
+    min-width: 400px;
+  }
+  .pad {
+    padding: 20px;
+  }
+  .div {
+    text-align: center;
+    min-width: 400px;
+  }

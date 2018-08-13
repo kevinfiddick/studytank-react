@@ -1,12 +1,12 @@
 .button {
-  display: block;
-  margin: 0px;
+  height: 50px;
+  padding: 50px;
   text-align: left;
 }
 
 .buttonLabel {
-  display: block;
-  text-align: left;
+  position: absolute;
+  left: 10px;
 }
 
 .filter {
@@ -14,6 +14,10 @@
   margin: 15px;
   padding: 15px;
   text-align: center;
+}
+
+.resize {
+  font-size: 60px;
 }
 
 ul {

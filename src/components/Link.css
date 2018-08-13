@@ -1,0 +1,32 @@
+.darklink {
+
+}
+.darklink:hover{
+  text-decoration: none;
+  color: black;
+}
+.lightlink {
+  color: #EEEEEE;
+}
+.lightlink:hover{
+  text-decoration: none;
+  color: #FFFFFF;
+}
+.link {
+}
+.link:hover{
+  text-decoration: none;
+  color: none;
+}
+.label{
+  height: 2px;
+}
+.labelIcon{
+  height: 2px;
+}
+.labelContainer{
+  height: 2px;
+}
+.downSize{
+  height: 2px;
+}

@@ -5,8 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import ax from './api';
 import './Form.css';
-import {Link} from 'react-router-dom';
-import { sha256 } from './Encoder';
+
 
 
 export default class RegisterForm extends React.Component {
@@ -35,55 +34,14 @@ export default class RegisterForm extends React.Component {
 
           alert("here");
         if(user.passwordInput === user.confirmPasswordInput){
-          sha256(user.passwordInput).then(function(value){
-            user.password = value;
+          delete user.confirmPasswordInput;
             alert(JSON.stringify(user));
-            // Send a POST request
-            ax({
-              method: 'put',
-              url: '/user/'+user.email,
-              data: {
-                email: user.email,
-                password: user.password,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                school: user.school,
-                notifications: []
-              }
-            });
-          });
+          ax.post('http://localhost:5984/newuser', { user })
+            .then((result) => {
+              //access the results here....
+            }
+          );
         }
-    }
-
-    componentWillMount(){
-      //checks if localStorage is expired
-      const MONTH_IN_MS = 2678400000;
-      var expiration = 0;
-      var grace = 3 * MONTH_IN_MS;
-      var email = '';
-      var password = '';
-      //save local storage email and password for easy access
-      try{
-          email = localStorage.getItem("email");
-          password = localStorage.getItem("password");
-          expiration = localStorage.getItem("expires");
-          console.log(password);
-          if(expiration < Date.now()){
-              localStorage.clear();
-          }
-          else{
-              localStorage.setItem("expires", Date.now() + grace);
-              ax.get('/' + 'user' + '/' + email)
-        				.then(res => {
-                  if (res.data.password === password) {
-                    window.location.replace("/dashboard/notes");
-                  }
-        				})
-                .catch(c => {
-                });
-        	}
-      }catch(e){
-      }
     }
 
     render() {
@@ -93,7 +51,7 @@ export default class RegisterForm extends React.Component {
                   <Typography variant='headline' component='h1'>
                     Register
                   </Typography>
-                  <form className="container" onSubmit={this.onSubmit}>
+                  <form className="container" onSubmit={this.onSubmit} noValidate>
                     <TextField
                       required
                       id='firstname'
@@ -153,11 +111,9 @@ export default class RegisterForm extends React.Component {
                     <Button type='submit' variant='outlined' color='primary' className="button">
                       Submit
                     </Button>
+
                   </form>
-                  <Link to='/login'>Already Have An Account? Log In</Link>
                 </Paper>
-                <br/>
-                <br/>
               </div>
             );
     }

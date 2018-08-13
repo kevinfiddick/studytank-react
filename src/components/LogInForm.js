@@ -6,20 +6,17 @@ import Button from '@material-ui/core/Button'
 import ax from './api';
 import './Form.css';
 import {Link} from 'react-router-dom';
+import {withRouter} from "react-router-dom";
+import {Router} from "react-router";
 import { sha256 } from './Encoder';
 
-
-export default class RegisterForm extends React.Component {
+export default class LogInForm extends React.Component {
 
     constructor() {
         super();
         this.state = {
-          firstname: '',
-          lastname: '',
           email: '',
-          school: '',
-          passwordInput: '',
-          confirmPasswordInput: ''
+          password: ''
         };
     }
     onChange = (e) => {
@@ -32,27 +29,37 @@ export default class RegisterForm extends React.Component {
         e.preventDefault();
         // get our form data out of state
         const user = this.state;
+        const password = sha256(user.password);
+          ax.get('http://localhost:5984/user/' + user.email)
+            .then((result) => {
+              password.then(function(value){
+                if (result.data.password === value) {
+                  console.log("Logged In!");
+                  localStorage.setItem('email', user.email);
+                  localStorage.setItem('password', value);
 
-          alert("here");
-        if(user.passwordInput === user.confirmPasswordInput){
-          sha256(user.passwordInput).then(function(value){
-            user.password = value;
-            alert(JSON.stringify(user));
-            // Send a POST request
-            ax({
-              method: 'put',
-              url: '/user/'+user.email,
-              data: {
-                email: user.email,
-                password: user.password,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                school: user.school,
-                notifications: []
+                  const MONTH_IN_MS = 2678400000;
+                  var grace = 3 * MONTH_IN_MS;
+                  localStorage.setItem('expires', Date.now() + grace);
+
+                  window.location.replace("/dashboard/notes");
+                }
+                else{
+                    alert("Incorrect Password");
+                }
+              })
+
+            })
+            .catch(function (error) {
+              console.log(error);
+              if(error.response.status == 404){
+                alert("No users are registered under \n" + user.email +
+                  "\n Please try another email or Register for free");
+              } else{
+                alert("An error occured, please try again later.");
               }
-            });
-          });
-        }
+            }
+          );
     }
 
     componentWillMount(){
@@ -87,30 +94,14 @@ export default class RegisterForm extends React.Component {
     }
 
     render() {
+            const { email, password } = this.state;
             return (
               <div className="div">
                 <Paper className="root" elevation={1}>
                   <Typography variant='headline' component='h1'>
-                    Register
+                    Log In
                   </Typography>
                   <form className="container" onSubmit={this.onSubmit}>
-                    <TextField
-                      required
-                      id='firstname'
-                      onChange={this.onChange}
-                      label='First Name'
-                      className="joinedtextField"
-                      margin='normal'
-                      />
-                    <TextField
-                      required
-                      id='lastname'
-                      onChange={this.onChange}
-                      label='Last Name'
-                      className="joinedtextField"
-                      margin='normal'
-                      />
-                    <br/>
                     <TextField
                       required
                       id='email'
@@ -121,16 +112,8 @@ export default class RegisterForm extends React.Component {
                       />
                     <br/>
                     <TextField
-                      id='school'
-                      onChange={this.onChange}
-                      label='School of Attendance'
-                      className="textField"
-                      margin='normal'
-                      />
-                    <br/>
-                    <TextField
                       required
-                      id='passwordInput'
+                      id='password'
                       onChange={this.onChange}
                       label='Password'
                       className="textField"
@@ -139,25 +122,13 @@ export default class RegisterForm extends React.Component {
                       margin='normal'
                       />
                     <br/>
-                    <TextField
-                      required
-                      id='confirmPasswordInput'
-                      onChange={this.onChange}
-                      label='Confirm Password'
-                      className="textField"
-                      type='password'
-                      autoComplete='currentPassword'
-                      margin='normal'
-                      />
-                    <br/>
                     <Button type='submit' variant='outlined' color='primary' className="button">
-                      Submit
+                      Log In
                     </Button>
+
                   </form>
-                  <Link to='/login'>Already Have An Account? Log In</Link>
+                  <Link to='/register'>or Register Here (It's Free!)</Link>
                 </Paper>
-                <br/>
-                <br/>
               </div>
             );
     }
