@@ -1,1 +1,1 @@
-import FilterList from './GroupPageNoteList';
+import FilterList from './GroupPageNoteList'

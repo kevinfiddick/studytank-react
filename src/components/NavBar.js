@@ -16,6 +16,8 @@ import './Link.css'
 
 const smallFont = { fontSize: '12px' };
 
+
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -62,6 +64,7 @@ export default class IconLabelTabs extends React.Component {
 	}
 
 	render() {
+    
 		return (
     <MuiThemeProvider theme={theme}>
         <Row>
@@ -69,7 +72,7 @@ export default class IconLabelTabs extends React.Component {
             <AppBar
 							position="static"
 							color="primary"
-						>
+					  	>
               <Tabs
                 value={this.state.value}
                 fullWidth
@@ -109,6 +112,7 @@ export default class IconLabelTabs extends React.Component {
           </Col>
         </Row>
 			</MuiThemeProvider>
+
 		);
 	}
 }

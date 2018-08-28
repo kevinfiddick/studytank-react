@@ -2,24 +2,24 @@
 import React from 'react'
 
 class getComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       error: null,
       isLoaded: false,
       items: []
-    };
+    }
   }
 
-  componentDidMount() {
-    fetch("http://localhost:5984/group/_design/dashboard/_view/mygroups")
+  componentDidMount () {
+    fetch('http://localhost:5984/group/_design/dashboard/_view/mygroups')
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
             items: result.rows
-          });
+          })
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -28,17 +28,17 @@ class getComponent extends React.Component {
           this.setState({
             isLoaded: true,
             error
-          });
+          })
         }
       )
   }
 
-  render() {
-    const { error, isLoaded, items } = this.state;
+  render () {
+    const { error, isLoaded, items } = this.state
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
-      return <div>Loading...</div>;
+      return <div>Loading...</div>
     } else {
       return (
         <ul>
@@ -48,7 +48,7 @@ class getComponent extends React.Component {
             </li>
           ))}
         </ul>
-      );
+      )
     }
   }
 }

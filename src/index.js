@@ -20,156 +20,164 @@ import CreateGroup from './components/CreateGroup'
 import Group from './components/GroupPageNoteList'
 import CreateNote from './components/CreateNote'
 import ProfileSettings from './components/ProfileSettings'
+import UploadNote from './components/SimpleMDE'
 import Logo from './components/Logo'
-import 'bootstrap/dist/css/bootstrap.css';
+import Note from './components/note'
+import 'bootstrap/dist/css/bootstrap.css'
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 const theme = createMuiTheme({
   palette: {
 	   primary: {
-       light: '#757575',
-       main: '#616161',
-       dark: '#424242',
-       contrastText: '#fff',
+      light: '#757575',
+      main: '#616161',
+      dark: '#424242',
+      contrastText: '#fff'
 	   },
 	   secondary: {
 	     light: '#43A047',
 	     main: '#388E3C',
 	     dark: '#2E7D32',
-	     contrastText: '#fff',
+	     contrastText: '#fff'
 	   }
   }
-});
+})
 
 const PayrocPage = ({ match }) => (
   <div>
-    <Payroc/>
+    <Payroc />
   </div>
 )
 
 const RegisterPage = ({ match }) => (
   <div>
-    <NavBar pathname='register'/>
-    <SecondaryNavBar subpath='register'/>
-    <RegisterForm/>
+    <NavBar pathname='register' />
+    <SecondaryNavBar subpath='register' />
+    <RegisterForm />
   </div>
 )
 
 const LogInPage = ({ match }) => (
   <div>
-    <NavBar pathname='login'/>
-    <SecondaryNavBar subpath='login'/>
-    <LogInForm/>
+    <NavBar pathname='login' />
+    <SecondaryNavBar subpath='login' />
+    <LogInForm />
   </div>
 )
 
 const DashboardNotesPage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-      <DashboardNavBar subpath='notes'/>
+      <DashboardNavBar subpath='notes' />
       <Heading>Notes</Heading>
-      <Info>Here is where you will find all the Notes that you've Uploaded or Bookmarked</Info>
-      <DashboardButton color='primary' linkTo='/create/note' label='Upload New Note'/>
-      <FilterNoteList/>
+      <Info>Here is where you will find all the Notes that youve Uploaded or Bookmarked</Info>
+      <DashboardButton color='primary' linkTo='/create/note' label='Upload New Note' />
+      <FilterNoteList />
     </Authentification>
   </div>
 )
 
 const DashboardGroupsPage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-    <DashboardNavBar subpath='groups'/>
-    <Heading>Groups</Heading>
-    <MuiThemeProvider theme={theme}>
-    <DashboardButton color='secondary' linkTo='/create/group' label='Create New Group'/>
-      <FilterGroupList/>
-    </MuiThemeProvider>
-  </Authentification>
+      <DashboardNavBar subpath='groups' />
+      <Heading>Groups</Heading>
+      <MuiThemeProvider theme={theme}>
+        <DashboardButton color='secondary' linkTo='/create/group' label='Create New Group' />
+        <FilterGroupList />
+      </MuiThemeProvider>
+    </Authentification>
   </div>
 )
 
 const DashboardSettingsPage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-    <DashboardNavBar subpath='settings'/>
-    <Heading>Settings</Heading>
-    <MuiThemeProvider theme={theme}>
-    <DashboardButton color='primary' linkTo='/faq' label='Frequently Asked Questions'/>
-    </MuiThemeProvider>
-    <ProfileSettings />
-  </Authentification>
+      <DashboardNavBar subpath='settings' />
+      <Heading>Settings</Heading>
+      <MuiThemeProvider theme={theme}>
+        <DashboardButton color='primary' linkTo='/faq' label='Frequently Asked Questions' />
+      </MuiThemeProvider>
+      <ProfileSettings />
+    </Authentification>
   </div>
 )
 
 const DashboardLogOffPage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-    <DashboardNavBar subpath='exit'/>
-    <Heading>Are You Sure You Want To Log Off?</Heading>
-    <LogOff />
-  </Authentification>
+      <DashboardNavBar subpath='exit' />
+      <Heading>Are You Sure You Want To Log Off?</Heading>
+      <LogOff />
+    </Authentification>
   </div>
 )
 
 const CreateGroupPage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-    <DashboardNavBar subpath='groups'/>
-    <Heading>Create Group</Heading>
-    <MuiThemeProvider theme={theme}>
-    <DashboardButton color='secondary' linkTo='/dashboard/groups' label='Go Back'/>
-    <br/><CreateGroup />
-    </MuiThemeProvider>
-  </Authentification>
+      <DashboardNavBar subpath='groups' />
+      <Heading>Create Group</Heading>
+      <MuiThemeProvider theme={theme}>
+        <DashboardButton color='secondary' linkTo='/dashboard/groups' label='Go Back' />
+        <br /><CreateGroup />
+      </MuiThemeProvider>
+    </Authentification>
   </div>
 )
 
 const CreateNotePage = ({ match }) => (
   <div>
-    <NavBar pathname='dashboard'/>
+    <NavBar pathname='dashboard' />
     <Authentification>
-    <DashboardNavBar subpath='notes'/>
-    <CreateNote />
-  </Authentification>
+      <DashboardNavBar subpath='notes' />
+      <CreateNote />
+    </Authentification>
   </div>
 )
 
 const GroupPage = ({ match }) => (
-    <div>
-      <NavBar pathname='group'/>
-      <br/><Group id={match.params.id}/>
-    </div>
+  <div>
+    <NavBar pathname='group' />
+    <br /><Group id={match.params.id} />
+  </div>
 )
 
 const NotificationsPage = ({ match }) => (
   <div>
-    <NavBar pathname='notifications'/>
+    <NavBar pathname='notifications' />
     <Authentification>
-    <Heading>Notifications</Heading>
+      <Heading>Notifications</Heading>
 
-      </Authentification>
+    </Authentification>
+  </div>
+)
+
+const UploadNotePage = ({ match }) => (
+  <div>
+    <NavBar pathname='note' />
+    <UploadNote />
   </div>
 )
 
 const AssessmentsPage = ({ match }) => (
   <div>
-    <NavBar pathname='assessments'/>
-    <Authentification>
-
-    </Authentification>
+    <NavBar pathname='assessments' />
+    <Authentification />
+    <Note />
 
   </div>
 )
 
 const SearchPage = ({ searchterm, match }) => (
   <div>
-    <NavBar pathname='search'/>
+    <NavBar pathname='search' />
     <Logo />
   </div>
 )
@@ -180,7 +188,7 @@ const App = () => (
       <Switch>
         <Route path='/register' component={RegisterPage} />
         <Route path='/login' component={LogInPage} />
-        <Route path='/dashboard/notes' component={DashboardNotesPage}/>
+        <Route path='/dashboard/notes' component={DashboardNotesPage} />
         <Route path='/dashboard/groups' component={DashboardGroupsPage} />
         <Route path='/dashboard/settings' component={DashboardSettingsPage} />
         <Route path='/dashboard/exit' component={DashboardLogOffPage} />
@@ -190,6 +198,7 @@ const App = () => (
         <Route path='/notifications' component={NotificationsPage} />
         <Route path='/assessments' component={AssessmentsPage} />
         <Route path='/search' component={SearchPage} />
+        <Route path='/uploadNote' component={UploadNotePage} />
         <Route path='/payroc' component={PayrocPage} />
         <Route path='' component={SearchPage} />
       </Switch>
@@ -199,7 +208,7 @@ const App = () => (
 
 var render = () => {
   ReactDOM.render(
-      <App />,
+    <App />,
     document.getElementById('root')
   )
 }

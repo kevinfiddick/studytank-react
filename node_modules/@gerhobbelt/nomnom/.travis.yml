@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - 8
+  - 7
+  - 6
+  - 5
+  - 4
+  - node
+
+# `npm test` fails on TravisCI with a crash while trying to load nodeunit 
+# from the local node_modules/ store via `bash`, so we run the tests another way...
+
+before_script:
+  npm install -g nodeunit
+
+script:
+  nodeunit test/*.js

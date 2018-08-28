@@ -97,7 +97,7 @@ export default class LogInForm extends React.Component {
             const { email, password } = this.state;
             return (
               <div className="div">
-                <Paper className="root" elevation={1}>
+                <Paper className="root" elevation={4}>
                   <Typography variant='headline' component='h1'>
                     Log In
                   </Typography>
