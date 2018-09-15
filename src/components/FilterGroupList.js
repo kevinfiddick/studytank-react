@@ -13,15 +13,34 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import MyGroupIcon from "@material-ui/icons/Group";
 import FollowedGroupIcon from "@material-ui/icons/PeopleOutline";
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-/** TODO:
-	(1)	Get Username from props!
-**/
+const theme = createMuiTheme({
+	palette: {
+	   secondary: {
+	     light: '#00796B',
+	     main: '#FF6F00',
+	     dark: '#E65100',
+	     contrastText: '#fff',
+	   }
+  },
+	overrides: {
+      MuiButton: {
+        root: {
+          marginTop: 4,
+        }
+      }
+    }
+});
 
 export default class FilterGroupList extends React.Component {
 	state = {
+				email: '',
 				myGroups: [],
 				followedGroups: [],
 		    items: [],
@@ -172,11 +191,12 @@ export default class FilterGroupList extends React.Component {
 	* - MY GROUPS
 	* - FOLLOWED GROUPS
 	*/
-	componentWillMount() {
-		//TODO: catch param username (email address of user)
+	componentDidMount() {
+		const email = localStorage.getItem('email');
+		this.setState({email: email});
 
 		const setGroups = (view) => {
-			ax.get('/' + 'group' + '/_design/dashboard/_view/' + view + '?key=\"' + 'user56@example.com' + '\"')
+			ax.get('/' + 'group' + '/_design/dashboard/_view/' + view + '?key=\"' + email + '\"')
 				.then(res => {
 						const viewArray = res.data.rows;
 						const itemsArray = this.state.items;
@@ -264,20 +284,23 @@ export default class FilterGroupList extends React.Component {
 							fullWidth
 							autoComplete='off'
         		/>
+					<MuiThemeProvider theme={theme}>
 							<ul>
 								{this.state.filteredItems.map(item =>
+									<div key={item.id}>
+										<Row>
+											<Col xs={{ size: 12 }}>
 									<Button
-										key={item.id}
-										variant="outlined"
+										variant="contained"
 										color="secondary"
 										fullWidth
 										classes={{
-											root: 'button',
-        							label: 'buttonLabel'
+											root: 'light',
+        							label: 'lightLabel'
       							}}
-
+                    component={Link} to={`/group/${item.id}`}
 									>
-									<span className='buttonLabel' >
+									<span className='lightLabel' >
 										{item.value.label === 'mygroups' && <MyGroupIcon />}
 										{item.value.label === 'followed' && <FollowedGroupIcon />}
 										<span>
@@ -285,8 +308,13 @@ export default class FilterGroupList extends React.Component {
 											{this.state.field} {item.value.field}
 										</span></span>
 									</Button>
+								</Col>
+									</Row>
+									<Row></Row>
+									</div>
 								)}
 							</ul>
+							</MuiThemeProvider>
 					</Col>
 				</Row>
 			</Container>

@@ -27,7 +27,7 @@ export default class SecondaryTabs extends React.Component {
 		value: 5
 	};
 
-	componentWillMount() {
+	componentDidMount() {
 		var currentLocation = this.props.subpath;
 		console.log(currentLocation)
 		switch(currentLocation){
@@ -42,7 +42,8 @@ export default class SecondaryTabs extends React.Component {
 
 	render() {
 		return (
-			<MuiThemeProvider theme={theme}>
+		<MuiThemeProvider theme={theme}>
+      <Container fluid='true'>
 				<Row>
           <Col xs="12">
             <AppBar
@@ -71,7 +72,8 @@ export default class SecondaryTabs extends React.Component {
             </AppBar>
           </Col>
         </Row>
-			</MuiThemeProvider>
+      </Container>
+		</MuiThemeProvider>
 		);
 	}
 }

@@ -195,7 +195,7 @@ export default class FilterNoteList extends React.Component {
 	* - UPLOADED NOTES
 	* - BOOKMARKED NOTES
 	*/
-	componentWillMount() {
+	componentDidMount() {
 		//TODO: catch param username (email address of user)
 
 		const setNotes = (view) => {
@@ -291,8 +291,8 @@ export default class FilterNoteList extends React.Component {
         		/>
 							<ul>
 								{this.state.filteredItems.map(item =>
+									<div key={item.id}>
 									<Button
-										key={item.id}
 										variant="outlined"
 										color="primary"
 										fullWidth
@@ -310,6 +310,7 @@ export default class FilterNoteList extends React.Component {
 											{this.state.field} {item.value.field}
 										</span></span>
 									</Button>
+									</div>
 								)}
 							</ul>
 					</Col>

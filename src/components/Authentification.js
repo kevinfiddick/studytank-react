@@ -18,7 +18,7 @@ export default class Authentification extends React.Component {
 	* - UPLOADED NOTES
 	* - BOOKMARKED NOTES
 	*/
-	componentWillMount() {
+	componentDidMount() {
     //checks if localStorage is expired
     const MONTH_IN_MS = 2678400000;
     var expiration = 0;
@@ -30,7 +30,6 @@ export default class Authentification extends React.Component {
         email = localStorage.getItem("email");
         password = localStorage.getItem("password");
         expiration = localStorage.getItem("expires");
-        console.log(password);
         if(expiration < Date.now()){
             localStorage.clear();
             this.setState({content: 'login'});

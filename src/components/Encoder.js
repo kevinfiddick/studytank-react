@@ -1,5 +1,5 @@
 
-
+  var TextEncoder;
 
   const sha256 = function(str) {
     init();

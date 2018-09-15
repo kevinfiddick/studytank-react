@@ -23,6 +23,8 @@ export default class CreateGroupForm extends React.Component {
     constructor() {
         super();
         this.state = {
+          username: '',
+          email: '',
           school: '',
           password: '',
           newPassword: '',
@@ -44,25 +46,31 @@ export default class CreateGroupForm extends React.Component {
         // get our form data out of state
         const school = this.state.school;
 
-        ax.get('http://localhost:5984/user/' + 'fiddickkg@msoe.edu')
+        ax.get('/user/' + this.state.email)
           .then((result) => {
             var user = result.data;
               console.log(result);
-            ax({
-              method: 'post',
-              url: '/user',
-              data: {
-                _id: user._id,
-                _rev: user._rev,
-                email: user.email,
-                password: user.password,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                school: school,
-                notifications: user.notifications
+              if(!user.hasOwnProperty('username')){
+                user.username =
+                  user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
               }
+              ax({
+                method: 'post',
+                url: '/user',
+                data: {
+                  _id: user._id,
+                  _rev: user._rev,
+                  email: user.email,
+                  username: user.username,
+                  password: user.password,
+                  firstname: user.firstname,
+                  lastname: user.lastname,
+                  school: school,
+                  notifications: user.notifications
+                }
             }).then((postResult) => {
               this.setState({updateSchoolStatus: 'Updated' });
+              localStorage.setItem('school', school);
 
             });
           }
@@ -71,23 +79,55 @@ export default class CreateGroupForm extends React.Component {
 
     onPasswordSubmit = (e) => {
         e.preventDefault();
-        this.setState({updateSchoolStatus: 'Please Wait...' });
-        // get our form data out of state
-        const school = this.state.school;
-
-        ax.get('http://localhost:5984/user/' + 'fiddickkg@msoe.edu')
+        if(this.state.newPassword === this.state.confirmPassword){
+        this.setState({updatePasswordStatus: 'Please Wait...' });
+        ax.get('/user/' + this.state.email)
           .then((result) => {
             var user = result.data;
-            user.school = school;
-            ax.post('http://localhost:5984/user', { user })
-              .then((result) => {
-                console.log(result);
-                this.setState({updateSchoolStatus: 'Updated' });
-
+            sha256(this.state.password).then(result => {
+              if(result === user.password){
+                sha256(this.state.newPassword).then(newPassword =>{
+                  if(!user.hasOwnProperty('username')){
+                    user.username =
+                      user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+                  }
+                  ax({
+                    method: 'post',
+                    url: '/user',
+                    data: {
+                      _id: user._id,
+                      _rev: user._rev,
+                      email: user.email,
+                      username: user.username,
+                      password: newPassword,
+                      firstname: user.firstname,
+                      lastname: user.lastname,
+                      school: user.school,
+                      notifications: user.notifications
+                    }
+                  }).then((postResult) => {
+                    this.setState({updatePasswordStatus: 'Updated' });
+                    localStorage.setItem('password', newPassword);
+                    alert("Your Password Has Been Successfully Updated");
+                  });
+                })
               }
-            );
+            });
+
           }
         );
+      }else{
+        alert("Your passwords do not match");
+      }
+    }
+
+    componentDidMount(){
+      const email = localStorage.getItem('email');
+  		this.setState({email: email});
+      var school_data = localStorage.getItem('school');
+    	this.setState({school: school_data});
+      const username = localStorage.getItem('username');
+    	this.setState({username: username});
     }
 
     render() {
@@ -97,6 +137,11 @@ export default class CreateGroupForm extends React.Component {
             return (
         			<Container>
         					<Col md={{ size: 8, offset: 2 }} xs={{ size: 12, offset: 0 }}>
+                    <br/>
+                      <Typography variant='headline'>
+                        username: {this.state.username}
+                      </Typography>
+                    <hr/>
               <form onSubmit={this.onSchoolSubmit}>
                 <br/>
                     <Typography variant='subheading'>
@@ -106,15 +151,16 @@ export default class CreateGroupForm extends React.Component {
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>
                         <span style={{
-  padding: '10px 0',
-  float: 'right'
-}} ></span>
+                            padding: '10px 0',
+                            float: 'right'
+                          }} ></span>
                       </Grid>
                       <Grid item xs={10}>
           						        <TextField
                                 required
                     		        id='school'
           					            onChange={this.onChange}
+                                value={this.state.school}
                                 label='School of Attendance'
           							        margin='normal'
           							        fullWidth
@@ -126,9 +172,9 @@ export default class CreateGroupForm extends React.Component {
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>
                         <span style={{
-  padding: '10px 0',
-  float: 'right'
-}} ></span>
+                            padding: '10px 0',
+                            float: 'right'
+                          }} ></span>
                       </Grid>
                       <Grid item xs={10}>
                         <Button type='submit' variant='outlined' className="button">
@@ -168,9 +214,9 @@ export default class CreateGroupForm extends React.Component {
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>
                         <span style={{
-  padding: '10px 0',
-  float: 'right'
-}} > </span>
+                            padding: '10px 0',
+                            float: 'right'
+                          }} > </span>
                       </Grid>
                       <Grid item xs={10}>
                         <TextField
@@ -189,9 +235,9 @@ export default class CreateGroupForm extends React.Component {
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>
                         <span style={{
-  padding: '10px 0',
-  float: 'right'
-}} > <SecurityIcon /> </span>
+                            padding: '10px 0',
+                            float: 'right'
+                          }} > <SecurityIcon /> </span>
                       </Grid>
                       <Grid item xs={10}>
                         <TextField
@@ -210,9 +256,9 @@ export default class CreateGroupForm extends React.Component {
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>
                         <span style={{
-  padding: '10px 0',
-  float: 'right'
-}} ></span>
+                            padding: '10px 0',
+                            float: 'right'
+                          }} ></span>
                       </Grid>
                       <Grid item xs={10}>
                         <Button type='submit' variant='outlined' className="button">

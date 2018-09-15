@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import ax from './api';
 import './Form.css';
+import {Alert} from "reactstrap";
 import {Link} from 'react-router-dom';
 import {withRouter} from "react-router-dom";
 import {Router} from "react-router";
@@ -16,7 +17,8 @@ export default class LogInForm extends React.Component {
         super();
         this.state = {
           email: '',
-          password: ''
+          password: '',
+          errorStatus: ''
         };
     }
     onChange = (e) => {
@@ -26,17 +28,24 @@ export default class LogInForm extends React.Component {
     }
 
     onSubmit = (e) => {
-        e.preventDefault();
         // get our form data out of state
-        const user = this.state;
-        const password = sha256(user.password);
-          ax.get('http://localhost:5984/user/' + user.email)
+        const password = sha256(this.state.password);
+        let that = this;
+          ax.get('http://localhost:5984/user/' + this.state.email)
             .then((result) => {
               password.then(function(value){
-                if (result.data.password === value) {
-                  console.log("Logged In!");
+                const user = result.data;
+                if (user.password === value) {
                   localStorage.setItem('email', user.email);
                   localStorage.setItem('password', value);
+                  localStorage.setItem('firstname', user.firstname);
+                  localStorage.setItem('lastname', user.lastname);
+                  localStorage.setItem('school', user.school);
+                  if(!user.hasOwnProperty('username')){
+                    user.username =
+                      user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+                  }
+                  localStorage.setItem('username', user.username);
 
                   const MONTH_IN_MS = 2678400000;
                   var grace = 3 * MONTH_IN_MS;
@@ -45,7 +54,11 @@ export default class LogInForm extends React.Component {
                   window.location.replace("/dashboard/notes");
                 }
                 else{
-                    alert("Incorrect Password");
+                  var errorStatus = 'Incorrect Password';
+                  if(that.state.errorStatus.search('Incorrect Password') == 0){
+                    errorStatus = that.state.errorStatus + '!';
+                  }
+                  that.setState({errorStatus: errorStatus });
                 }
               })
 
@@ -53,16 +66,18 @@ export default class LogInForm extends React.Component {
             .catch(function (error) {
               console.log(error);
               if(error.response.status == 404){
-                alert("No users are registered under \n" + user.email +
-                  "\n Please try another email or Register for free");
+                var errorStatus = "No users are registered under \n" + that.state.email +
+                  "\n Please try another email or Register for free";
+                that.setState({ errorStatus: errorStatus });
               } else{
-                alert("An error occured, please try again later.");
+                that.setState({ errorStatus: "An error occured, please try again later." });
               }
             }
           );
+              e.preventDefault();
     }
 
-    componentWillMount(){
+    componentDidMount(){
       //checks if localStorage is expired
       const MONTH_IN_MS = 2678400000;
       var expiration = 0;
@@ -94,18 +109,24 @@ export default class LogInForm extends React.Component {
     }
 
     render() {
-            const { email, password } = this.state;
+            const { email, password, errorStatus } = this.state;
             return (
               <div className="div">
                 <Paper className="root" elevation={1}>
                   <Typography variant='headline' component='h1'>
                     Log In
                   </Typography>
-                  <form className="container" onSubmit={this.onSubmit}>
+                  <br/>
+                  {this.state.errorStatus != '' &&
+                    <Alert color="danger">
+                      {this.state.errorStatus.split('\n').map((item, i) => <div key={i}>{item}</div>)}
+                    </Alert>
+                  }
+                  <form className="container" onSubmit={this.onSubmit.bind(this)}>
                     <TextField
                       required
                       id='email'
-                      onChange={this.onChange}
+                      onChange={this.onChange.bind(this)}
                       label='Email'
                       className="textField"
                       margin='normal'
@@ -114,7 +135,7 @@ export default class LogInForm extends React.Component {
                     <TextField
                       required
                       id='password'
-                      onChange={this.onChange}
+                      onChange={this.onChange.bind(this)}
                       label='Password'
                       className="textField"
                       type='password'

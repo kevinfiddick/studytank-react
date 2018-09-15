@@ -29,3 +29,8 @@
     text-align: center;
     min-width: 400px;
   }
+  .notification {
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+  }

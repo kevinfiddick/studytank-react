@@ -1,12 +1,40 @@
 .button {
   height: 50px;
   padding: 50px;
+  margin: 3px;
   text-align: left;
+}
+
+.light {
+  height: 50px;
+  padding: 50px;
+  text-align: left;
+}
+.light:hover {
+  text-align: left;
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.wide {
+  margin: 3px;
+  width: 100%;
 }
 
 .buttonLabel {
   position: absolute;
   left: 10px;
+}
+
+.lightLabel {
+  position: absolute;
+  left: 10px;
+}
+.lightLabel:hover {
+  position: absolute;
+  left: 10px;
+  text-decoration: none;
+  color: #FFFFFF;
 }
 
 .filter {

@@ -1,5 +1,4 @@
 .darklink {
-
 }
 .darklink:hover{
   text-decoration: none;
@@ -29,4 +28,8 @@
 }
 .downSize{
   height: 2px;
+}
+.badge{
+  top: 5px;
+  right: -10px;
 }

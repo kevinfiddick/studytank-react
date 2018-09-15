@@ -17,10 +17,11 @@ import LogInForm from './components/LogInForm'
 import LogOff from './components/LogOff'
 import Payroc from './components/Payroc'
 import CreateGroup from './components/CreateGroup'
-import Group from './components/GroupPageNoteList'
+import Group from './components/GroupPage'
 import CreateNote from './components/CreateNote'
 import ProfileSettings from './components/ProfileSettings'
 import Logo from './components/Logo'
+import Notifications from './components/Notifications'
 import 'bootstrap/dist/css/bootstrap.css';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -34,9 +35,9 @@ const theme = createMuiTheme({
        contrastText: '#fff',
 	   },
 	   secondary: {
-	     light: '#43A047',
-	     main: '#388E3C',
-	     dark: '#2E7D32',
+	     light: '#00796B',
+	     main: '#FF6F00',
+	     dark: '#E65100',
 	     contrastText: '#fff',
 	   }
   }
@@ -152,7 +153,7 @@ const NotificationsPage = ({ match }) => (
     <NavBar pathname='notifications'/>
     <Authentification>
     <Heading>Notifications</Heading>
-
+    <Notifications />
       </Authentification>
   </div>
 )
@@ -181,7 +182,9 @@ const App = () => (
         <Route path='/register' component={RegisterPage} />
         <Route path='/login' component={LogInPage} />
         <Route path='/dashboard/notes' component={DashboardNotesPage}/>
+        <Route path='/dashboard/notes?' component={DashboardNotesPage}/>
         <Route path='/dashboard/groups' component={DashboardGroupsPage} />
+        <Route path='/dashboard/groups?' component={DashboardGroupsPage} />
         <Route path='/dashboard/settings' component={DashboardSettingsPage} />
         <Route path='/dashboard/exit' component={DashboardLogOffPage} />
         <Route path='/create/group' component={CreateGroupPage} />

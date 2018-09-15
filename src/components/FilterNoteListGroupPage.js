@@ -28,9 +28,9 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
-import DeleteIcon from "@material-ui/icons/DeleteForever";
+import RemoveIcon from "@material-ui/icons/Delete";
 import NewFolderIcon from "@material-ui/icons/CreateNewFolder";
-import AddToGroupIcon from "@material-ui/icons/GroupAdd";
+import AddNotesIcon from "@material-ui/icons/NoteAdd";
 import MoveIcon from "@material-ui/icons/FormatListBulleted";
 
 import UploadedNoteIcon from "@material-ui/icons/InsertDriveFile";
@@ -78,7 +78,7 @@ export default class FilterNoteList extends React.Component {
 				sort: 'abc',
 				selectedItems: [],
 				selectedFolders: [],
-				deleteStatus: 'Delete',
+				removeStatus: 'Remove',
 				folderStatus: 'Create Folder',
 				moveStatus: 'Move',
 				shareStatus: 'Share',
@@ -293,7 +293,7 @@ export default class FilterNoteList extends React.Component {
      var nullFolder = [];
 		 for(var i = 0; i < items.length; i++){
 			 var item = items[i];
-			 var folderID = item.value.folder[this.state.email];
+			 var folderID = item.value.folder[this.props.id];
 			 if(selectedFolders.includes(folderID) && !selectedItems.includes(item.id)){
 				 var foldersCopy = [];
 	 			 for(var i = 0; i < selectedFolders.length; i++){
@@ -305,12 +305,12 @@ export default class FilterNoteList extends React.Component {
 			 }
        else{
          if(!selectedFolders.includes(folderID) && selectedItems.includes(item.id)){
-           if(!addFolder.includes(folderID) && folderID != this.state.email){
+           if(!addFolder.includes(folderID) && folderID != this.props.id){
              addFolder.push(folderID);
            }
          }
          if(!selectedFolders.includes(folderID) && !selectedItems.includes(item.id)){
-           if(!nullFolder.includes(folderID) && folderID != this.state.email){
+           if(!nullFolder.includes(folderID) && folderID != this.props.id){
              nullFolder.push(folderID);
            }
 			   }
@@ -348,7 +348,7 @@ export default class FilterNoteList extends React.Component {
 	 			 selectedFolders.push(folderID);
 				 for(i = 0; i < items.length; i++){
 					 var item = items[i];
-					 if(item.value.folder[this.state.email] == folderID){
+					 if(item.value.folder[this.props.id] == folderID){
 						 selectedItems.push(item.id);
 					 }
 				 }
@@ -363,7 +363,7 @@ export default class FilterNoteList extends React.Component {
 	 			 }
 				 for(i = 0; i < items.length; i++){
 					 var item = items[i];
-					 if(item.value.folder[this.state.email] == folderID){
+					 if(item.value.folder[this.props.id] == folderID){
 						 removeItems.push(item.id);
 					 }
 				 }
@@ -376,29 +376,18 @@ export default class FilterNoteList extends React.Component {
 	 		 this.setState({selectedItems: selectedItems});
 	 	 }
 
-	 onDeleteItems(e){
-		 this.setState({deleteStatus: <span>Deleting... <CircularProgress /></span>});
+	 onRemoveItems(e){
+		 this.setState({removeStatus: <span>Deleting... <CircularProgress /></span>});
 		 var deleteIDs = this.state.selectedItems;
 		 var i = 0;
 		 var recursiveDelete = () => {
 			if(i < deleteIDs.length) {
 			 var deleteID = deleteIDs[i];
 			 ax.get('/' + 'note' + '/' + deleteID).then(result => {
-				 if(result.data.author == this.state.email){
-			 		ax.delete('/' + 'note' + '/' + deleteID + '?rev=' + result.data._rev )
-			 			.then(res => {
-							console.log(res);
-							i++;
-							recursiveDelete();
-			 			})
-						.catch(err => {
-							console.log(err);
-						})
-					}else{
 						var note = result.data;
-						var index = note.saved.indexOf(this.state.email);
+						var index = note.saved.indexOf(this.props.id);
 						note.saved.splice(index, 1);
-						note.folder == undefined ? note.folder = {} : delete note.folder[this.state.email];
+						note.folder == undefined ? note.folder = {} : delete note.folder[this.props.id];
 						//Converts note ratings to JSON
 						if(Object.prototype.toString.call(note.rating) === "[object Array]"){
 							var newrating = {};
@@ -435,7 +424,6 @@ export default class FilterNoteList extends React.Component {
 							i++;
 							recursiveDelete();
 						});
-					}
 			 });
 		  }else{
 				null;
@@ -457,7 +445,7 @@ export default class FilterNoteList extends React.Component {
 	 			 ax.get('/' + 'note' + '/' + itemID).then(result => {
 					 var note = result.data;
 					 note.folder == undefined ? note.folder = {} : null;
-					 var folderName = note.folder[this.state.email];
+					 var folderName = note.folder[this.props.id];
 					 keepFolders ? note.folder[group] = folderName : note.folder[group] = group;
 					 if(!note.saved.includes(group)){
 						 note.saved.push(group);
@@ -519,7 +507,7 @@ export default class FilterNoteList extends React.Component {
 	 			 ax.get('/' + 'note' + '/' + itemID).then(result => {
 					 var note = result.data;
 					 note.folder == undefined ? note.folder = {} : null;
-					 note.folder[this.state.email] = folderName;
+					 note.folder[this.props.id] = folderName;
 					 //Converts note ratings to JSON
 					 if(Object.prototype.toString.call(note.rating) === "[object Array]"){
 						 var newrating = {};
@@ -576,7 +564,7 @@ export default class FilterNoteList extends React.Component {
 	 			 ax.get('/' + 'note' + '/' + itemID).then(result => {
 					 var note = result.data;
 					 note.folder == undefined ? note.folder = {} : null;
-					 note.folder[this.state.email] = folderName;
+					 note.folder[this.props.id] = folderName;
 					 //Converts note ratings to JSON
 					 if(Object.prototype.toString.call(note.rating) === "[object Array]"){
 						 var newrating = {};
@@ -659,7 +647,7 @@ export default class FilterNoteList extends React.Component {
 
 		const setNotes = (view) => {
 			if(iteration < 2){
-			ax.get('/' + 'note' + '/_design/dashboard/_view/' + view + '?key=\"' + email + '\"')
+			ax.get('/' + 'note' + '/_design/dashboard/_view/' + view + '?key=\"' + this.props.id + '\"')
 				.then(res => {
 						const viewArray = res.data.rows;
 
@@ -677,20 +665,20 @@ export default class FilterNoteList extends React.Component {
 							}
 							if(note.value.folder != undefined){
 									var folders = this.state.folders;
-									var folder = note.value.folder[this.state.email];
+									var folder = note.value.folder[this.props.id];
 									if(folder == '' || folder == undefined){
-										folder = this.state.email;
+										folder = this.props.id;
 									}
 									if(!folders.includes(folder)){
 										folders.push(folder);
 										folders = orderBy(folders, [folder => folder.toLowerCase()]);
 										this.setState({ folders: folders });
 									}
-									note.value.folder[this.state.email] = folder;
+									note.value.folder[this.props.id] = folder;
 							}
 							else{
 								note.value.folder = {};
-								note.value.folder[this.state.email] = this.state.email;
+								note.value.folder[this.props.id] = this.props.id;
 							}
 							viewArray[i] = note;
 						}
@@ -839,13 +827,13 @@ export default class FilterNoteList extends React.Component {
 								)}
 											</div>
 								}
-								onClick={this.onDeleteItems.bind(this)}
-								confirm={this.state.deleteStatus}
+								onClick={this.onRemoveItems.bind(this)}
+								confirm={this.state.removeStatus}
 							>
 								<Tab
-									icon={<DeleteIcon />}
+									icon={<RemoveIcon />}
 									className="darklink"
-									label="Delete"
+									label="Remove"
                   disabled={!(this.state.selectedItems.length > 0)}
 								/>
 							</ConfirmationModal>
@@ -1004,7 +992,7 @@ export default class FilterNoteList extends React.Component {
 							confirm={this.state.shareStatus}
 						>
 								<Tab
-									icon={<AddToGroupIcon />}
+									icon={<AddNotesIcon />}
 									className="darklink"
 									label="Share"
                   disabled={!(this.state.selectedItems.length > 0)}
@@ -1017,7 +1005,7 @@ export default class FilterNoteList extends React.Component {
 							{<div>
 									<p>Select Which Folder To Move Items Into:</p>
 										{this.state.folders.map(title =>
-											<div key={title}> {title != this.state.email &&
+											<div key={title}> {title != this.props.id &&
 											<Row>
 											<Col xs={{ size: 1 }}>
 												<FormControlLabel
@@ -1056,7 +1044,7 @@ export default class FilterNoteList extends React.Component {
 									</Row>}
 									</div>
 									)}
-									<div key={this.state.email}>
+									<div key={this.props.id}>
 									<Row>
 									<Col xs={{ size: 1 }}>
 										<FormControlLabel
@@ -1064,8 +1052,8 @@ export default class FilterNoteList extends React.Component {
 												<Checkbox
 
 													color="default"
-													id={this.state.email}
-													checked={this.state.moveFolderSelect == this.state.email}
+													id={this.props.id}
+													checked={this.state.moveFolderSelect == this.props.id}
 													onChange={this.onMoveFolderSelected.bind(this)}
 												/>
 											}
@@ -1144,7 +1132,7 @@ export default class FilterNoteList extends React.Component {
 			<br/>
 					<ul>
 						{this.state.folders.map(title =>
-							<div key={title}> {title != this.state.email &&
+							<div key={title}> {title != this.props.id &&
 							<Row>
 							<Col xs={{ size: 1 }}>
 								<FormControlLabel
@@ -1171,7 +1159,7 @@ export default class FilterNoteList extends React.Component {
 								onClick={(e) => {
 									var openFolder = {title}.title;
 									this.state.openFolder == openFolder ?
-									this.setState({ openFolder: this.state.email}) :
+									this.setState({ openFolder: this.props.id}) :
 									this.setState({ openFolder: openFolder})
 								}
 								}
@@ -1187,7 +1175,7 @@ export default class FilterNoteList extends React.Component {
 							<Col xs={{ size: 11, offset: 1 }}>
 								{this.state.filteredItems.map(item =>
 									<div key={item.id}>
-										{item.value.folder[this.state.email] == title &&
+										{item.value.folder[this.props.id] == title &&
 											<Row>
 											<Col xs={{ size: 1 }}>
 												<FormControlLabel
@@ -1233,7 +1221,7 @@ export default class FilterNoteList extends React.Component {
 
 						{this.state.filteredItems.map(item =>
 							<div key={item.id}>
-								{item.value.folder[this.state.email] == this.state.email &&
+								{item.value.folder[this.props.id] == this.props.id &&
 									<Row>
 									<Col xs={{ size: 1 }}>
 										<FormControlLabel

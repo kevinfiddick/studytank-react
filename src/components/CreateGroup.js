@@ -39,17 +39,26 @@ export default class CreateGroupForm extends React.Component {
         e.preventDefault();
         // get our form data out of state
         const group = this.state;
+        ax({
+          method: 'put',
+          url: '/group/'+Date.now(),
+          data: {
+            title: group.title,
+            subject: group.subject,
+            school: group.school,
+            members: [
+              {
+                email: localStorage.getItem('email'),
+                firstname: localStorage.getItem('firstname'),
+                lastname: localStorage.getItem('lastname')
+              }
+            ]
+          }
+        }).then((result) => {
 
-          alert("here");
-        if(group.passwordInput === group.confirmPasswordInput){
-          delete group.confirmPasswordInput;
-            alert(JSON.stringify(group));
-          ax.post('http://localhost:5984/group', { group })
-            .then((result) => {
-              //access the results here....
-            }
-          );
-        }
+        }).catch(function (error) {
+
+        });
     }
 
     render() {
