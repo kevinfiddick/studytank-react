@@ -341,9 +341,11 @@ export default class FilterNoteList extends React.Component {
 			 var folderID = e.target.id;
 
 			 this.setState({newFolder: "New Folder"});
+       this.setState({folderStatus: "Create Folder"});
 	 		 if(e.target.checked){
 				 if(selectedItems.length == 0 && selectedFolders.length == 0){
 					 this.setState({newFolder: "Rename Folder"});
+           this.setState({folderStatus: "Rename Folder"});
 				 }
 	 			 selectedFolders.push(folderID);
 				 for(i = 0; i < items.length; i++){
@@ -810,7 +812,7 @@ export default class FilterNoteList extends React.Component {
 
 							<ConfirmationModal
                 disabled={!(this.state.selectedItems.length > 0)}
-								modalHeader="Confirm"
+								modalHeader="Perminantly Delete?"
 								message=
 								{<div><p>Are you sure you want to perminantly remove the following notes?</p>
 									{this.state.items.map(item =>
@@ -909,7 +911,7 @@ export default class FilterNoteList extends React.Component {
 						</ConfirmationModal>
 						<ConfirmationModal
               disabled={!(this.state.selectedItems.length > 0)}
-							modalHeader="Shere Items"
+							modalHeader="Share Items"
 							message=
 							{<div>
 								<MuiThemeProvider theme={theme}>
@@ -1141,7 +1143,7 @@ export default class FilterNoteList extends React.Component {
 						</ConfirmationModal>
 							</Tabs>
 						</AppBar>
-			<br/>
+        <br/>
 					<ul>
 						{this.state.folders.map(title =>
 							<div key={title}> {title != this.state.email &&

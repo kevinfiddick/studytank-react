@@ -84,6 +84,7 @@ const DashboardGroupsPage = ({ match }) => (
     <Authentification>
     <DashboardNavBar subpath='groups'/>
     <Heading>Groups</Heading>
+    <Info>Here is where you will find the Groups that you've Created or Followed</Info>
     <MuiThemeProvider theme={theme}>
     <DashboardButton color='secondary' linkTo='/create/group' label='Create New Group'/>
       <FilterGroupList/>

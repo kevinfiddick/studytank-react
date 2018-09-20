@@ -51,7 +51,7 @@ class ConfirmationModal extends React.Component {
 
   render() {
     return (
-      <span>
+      <span style={{zIndex:5}}>
         <span onClick={this.toggle}>{this.props.children}</span>
       {!this.state.disabled &&
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
@@ -62,7 +62,7 @@ class ConfirmationModal extends React.Component {
           </ModalBody>
           <ModalFooter>
             <Button color="default" onClick={this.toggle}>Cancel</Button>
-            <Button color="primary" type="submit">{this.props.confirm}</Button>
+            <Button  variant='contained' color="primary" type="submit">{this.props.confirm}</Button>
           </ModalFooter>
         </form>
       </Modal>}

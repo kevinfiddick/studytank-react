@@ -227,6 +227,8 @@ export default class FilterGroupList extends React.Component {
 	 */
 	render() {
 		return(
+			<div>
+			{this.state.items.length !== 0 &&
 			<Container>
 				<br/>
 				<Row>
@@ -318,6 +320,7 @@ export default class FilterGroupList extends React.Component {
 					</Col>
 				</Row>
 			</Container>
+		}</div>
     );
 	}
 }

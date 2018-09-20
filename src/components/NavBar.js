@@ -76,7 +76,7 @@ export default class IconLabelTabs extends React.Component {
 				this.setState({ value: 2 });
 				break;
 			case 'search':
-				this.setState({ value: 3 });
+				this.setState({ value: 2 });
 				break;
 		}
 

@@ -31,7 +31,7 @@ export default class LogInForm extends React.Component {
         // get our form data out of state
         const password = sha256(this.state.password);
         let that = this;
-          ax.get('http://localhost:5984/user/' + this.state.email)
+          ax.get('/user/' + this.state.email)
             .then((result) => {
               password.then(function(value){
                 const user = result.data;

@@ -72,7 +72,16 @@ export default class FilterNoteList extends React.Component {
 				field: '',
 				view: 'all',
 				sort: 'abc',
+				selectedItems: [],
+				selectedFolders: [],
+				removeStatus: 'Remove',
+				folderStatus: 'Create Folder',
+				moveStatus: 'Move',
+				folderName: '',
+				moveFolderSelect: '',
 				openFolder: '',
+				newFolder: 'New Folder',
+				keepFolders: true
 	};
 
 	/**
@@ -625,12 +634,265 @@ export default class FilterNoteList extends React.Component {
 				<Row>
 					<Col md={{ size: 8, offset: 2 }} xs={{ size: 12, offset: 0 }}>
             <br/>
+					  <AppBar
+							position="static"
+							color="default"
+							elevation= {0}
 
+						>
+							<Tabs
+								fullWidth
+								indicatorColor="secondary"
+								centered
+							>
+
+							<ConfirmationModal
+                disabled={!(this.state.selectedItems.length > 0)}
+								modalHeader="Perminantly Remove?"
+								message=
+								{<div><p>Are you sure you want to perminantly remove the following notes?</p>
+                <p>We recommend you consult your Group Members first, as this action cannot be undone. </p>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+										}
+									</Row>
+								)}
+											</div>
+								}
+								onClick={this.onRemoveItems.bind(this)}
+								confirm={this.state.removeStatus}
+							>
+								<Tab
+									icon={<RemoveIcon />}
+									className="darklink"
+									label="Remove"
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+							</ConfirmationModal>
+							<ConfirmationModal
+                disabled={!(this.state.selectedItems.length > 0)}
+								modalHeader={this.state.newFolder}
+								message=
+								{<div>
+									<TextField
+										required
+										autoFocus
+			          		id="folderName"
+			          		label={this.state.newFolder}
+					          type="input"
+										margin="normal"
+										className="filter"
+										fullWidth
+										autoComplete='off'
+										onChange={this.onFolderNameChange.bind(this)}
+          					InputProps={{
+            					startAdornment: <InputAdornment position="start"><NewFolderIcon /></InputAdornment>,
+          					}}
+			        		/>
+								<br/>
+								<p>This <b>folder</b> will contain:</p>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+										}
+									</Row>
+								)}
+											</div>
+								}
+								onClick={this.onNewFolder.bind(this)}
+								confirm={this.state.folderStatus}
+							>
+								<Tab
+									icon={<NewFolderIcon />}
+									className="darklink"
+									label={this.state.newFolder}
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+						</ConfirmationModal>
+						<ConfirmationModal
+              disabled={!(this.state.selectedItems.length > 0)}
+							modalHeader="Move Items"
+							message=
+							{<div>
+									<p>Select Which Folder To Move Items Into:</p>
+										{this.state.folders.map(title =>
+											<div key={title}> {title != this.props.id &&
+											<Row>
+											<Col xs={{ size: 1 }}>
+												<FormControlLabel
+													control={
+														<Checkbox
+
+															color="default"
+															id={title}
+															checked={this.state.moveFolderSelect == title}
+															onChange={this.onMoveFolderSelected.bind(this)}
+														/>
+													}
+												/>
+											</Col>
+											<Col xs={{ size: 11 }}>
+											<MUIButton
+												variant="contained"
+												color="primary"
+												fullWidth
+												classes={{
+													root: 'button',
+													label: 'buttonLabel'
+												}}
+												onClick={(e) => {
+													this.setState({ moveFolderSelect: {title}.title.toLowerCase()});
+												}}
+
+											>
+											<span className='buttonLabel' >
+												<FolderIcon />
+												<span>
+													{title} <br/>
+												</span></span>
+											</MUIButton>
+										</Col>
+									</Row>}
+									</div>
+									)}
+									<div key={this.props.id}>
+									<Row>
+									<Col xs={{ size: 1 }}>
+										<FormControlLabel
+											control={
+												<Checkbox
+
+													color="default"
+													id={this.props.id}
+													checked={this.state.moveFolderSelect == this.props.id}
+													onChange={this.onMoveFolderSelected.bind(this)}
+												/>
+											}
+										/>
+									</Col>
+									<Col xs={{ size: 11 }}>
+									<MUIButton
+										variant="outlined"
+										color="primary"
+										fullWidth
+										classes={{
+											root: 'button',
+											label: 'buttonLabel'
+										}}
+										onClick={(e) => {
+											this.setState({ moveFolderSelect: {email}.email.toLowerCase()});
+										}}
+
+									>
+									<span className='buttonLabel' >
+										<span>
+											No Folder
+										</span></span>
+									</MUIButton>
+								</Col>
+							</Row>
+							</div>
+							<ExpansionPanel>
+        				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          				<Typography>See Selected Items</Typography>
+        				</ExpansionPanelSummary>
+        				<ExpansionPanelDetails>
+								<Col xs={{ size: 12 }}>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+											}
+										</Row>
+									)}
+								</Col>
+        				</ExpansionPanelDetails>
+      				</ExpansionPanel>
+
+								</div>
+							}
+							onClick={this.onMoveToFolder.bind(this)}
+							confirm={this.state.moveStatus}
+						>
+								<Tab
+									icon={<MoveIcon />}
+									className="darklink"
+									label="Move"
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+						</ConfirmationModal>
+							</Tabs>
+						</AppBar>
+			<br/>
 					<ul>
 						{this.state.folders.map(title =>
 							<div key={title}> {title != this.props.id &&
 							<Row>
-							<Col xs={{ size: 12 }}>
+							<Col xs={{ size: 1 }}>
+								<FormControlLabel
+									control={
+										<Checkbox
+
+											color="default"
+											id={title}
+											checked={this.state.selectedFolders.includes(title)}
+											onChange={this.onSelectedFolder.bind(this)}
+										/>
+									}
+								/>
+							</Col>
+							<Col xs={{ size: 11 }}>
 							<MUIButton
 								variant={this.state.openFolder == title ? "outlined" : "contained"}
 								color="primary"
@@ -660,7 +922,20 @@ export default class FilterNoteList extends React.Component {
 									<div key={item.id}>
 										{item.value.folder[this.props.id] == title &&
 											<Row>
-											<Col xs={{ size: 11 }}>
+											<Col xs={{ size: 1 }}>
+												<FormControlLabel
+		          						control={
+		            						<Checkbox
+
+		              						color="default"
+															id={item.id}
+															checked={this.state.selectedItems.includes(item.id)}
+															onChange={this.onSelectedItem.bind(this)}
+		            						/>
+		          						}
+		        						/>
+											</Col>
+											<Col xs={{ size: 10 }}>
 											<MUIButton
 												variant="outlined"
 												color="primary"
@@ -692,7 +967,20 @@ export default class FilterNoteList extends React.Component {
 							<div key={item.id}>
 								{item.value.folder[this.props.id] == this.props.id &&
 									<Row>
-									<Col xs={{ size: 12 }}>
+									<Col xs={{ size: 1 }}>
+										<FormControlLabel
+          						control={
+            						<Checkbox
+
+              						color="default"
+													id={item.id}
+													checked={this.state.selectedItems.includes(item.id)}
+													onChange={this.onSelectedItem.bind(this)}
+            						/>
+          						}
+        						/>
+									</Col>
+									<Col xs={{ size: 11 }}>
 									<MUIButton
 										variant="outlined"
 										color="primary"

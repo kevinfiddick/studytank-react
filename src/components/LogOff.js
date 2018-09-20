@@ -21,7 +21,7 @@ export default class LogOff extends React.Component {
 			<Row>
 				<Col md={{ size: 4, offset: 2 }} xs={{ size: 6, offset: 0 }}>
 			      <Button
-			        variant="contained"
+			        variant="outlined"
 			        color="default"
 							fullWidth
 							className="darklink"
