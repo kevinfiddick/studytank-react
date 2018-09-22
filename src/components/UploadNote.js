@@ -15,6 +15,7 @@ import {Link} from 'react-router-dom';
 import './Link.css';
 import './Form.css';
 import Autosaving from "./Autosaving";
+import SimpleMDE from "./Simple";
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField'
@@ -53,7 +54,8 @@ class Note extends Component {
     isFact: true,
     language: 'EN',
     textbook: '',
-    uploadStatus: 'Upload'
+    uploadStatus: 'Upload',
+    edit: false
   };
 
   isFactChange(e){
@@ -166,7 +168,6 @@ class Note extends Component {
       let that = this;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
           var note = result.data;
-          console.log(note);
           that.setState({ title: note.title });
           that.setState({ subject: note.subject });
           that.setState({ content: note.content });
@@ -174,7 +175,7 @@ class Note extends Component {
           that.setState({ isFact: note.isFact });
           that.setState({ language: note.language });
           that.setState({ textbook: note.textbook });
-            console.log(that.state);
+          that.setState({ edit: true });
 
         }).then(res => {
           console.log(that.state);
@@ -209,8 +210,12 @@ class Note extends Component {
             </Row>
           <hr />
           <br />
-            <Autosaving value={this.state.content} onChange={this.onContentChange.bind(this)} />
-          <br />
+          {!this.state.edit &&
+            <Autosaving id='upload' onChange={this.onContentChange.bind(this)} />
+          }
+          {this.state.edit &&
+            <SimpleMDE value={this.state.content} onChange={this.onContentChange.bind(this)} />
+          }<br />
               <ConfirmationModal
                 disabled={this.state.title.length == 0}
                 modalHeader="Finishing Touches..."
@@ -265,6 +270,7 @@ class Note extends Component {
               >
 
               <Button
+                disabled={this.state.title.length == 0}
                 variant="contained"
                 color="primary"
                 className="wide"
