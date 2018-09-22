@@ -21,12 +21,12 @@ function Comment (props) {
 
   return (
     <div>
-      <Paper className={classes.root} elevation={15}>
+      <Paper style={{width:'85%', marginLeft:'15%'}} className={classes.root} elevation={2}>
         <Typography variant='headline' component='h3'>
         Tyler Gottlieb
         </Typography>
         <Typography component='p'>
-        This is the comment Body all the shazzy that they put here will be great extra sqaggy sidjhsdhskfjsdkfhsdkjfhsdjkfhsdjkfhsdjkfhsdjkfhsdjkfhsdjklfjsdk
+        REPLYYYYYYYYYYYYYYEPYYY will be great extra sqaggy sidjhsdhskfjsdkfhsdkjfhsdjkfhsdjkfhsdjkfhsdjkfhsdjkfhsdjklfjsdk
         </Typography>
         <Button color='primary'><ThumbsUp />Like</Button>
           <Button color='primary'><ReplyIcon />Reply</Button>
