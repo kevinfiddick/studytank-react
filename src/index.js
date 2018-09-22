@@ -20,7 +20,7 @@ import CreateGroup from './components/CreateGroup'
 import Group from './components/GroupPage'
 import Search from './components/Search'
 import SearchSubject from './components/SearchSubject'
-import Note from './components/NotePage2'
+import Note from './components/NotePage'
 import CreateNote from './components/UploadNote'
 import FilterSubjectList from './components/FilterSubjectList'
 import ProfileSettings from './components/ProfileSettings'
@@ -139,9 +139,19 @@ const CreateGroupPage = ({ match }) => (
 const CreateNotePage = ({ match }) => (
   <div>
     <NavBar pathname='dashboard'/>
-    <Authentification>
+  <Authentification>
     <DashboardNavBar subpath='notes'/>
     <CreateNote />
+  </Authentification>
+  </div>
+)
+
+const EditPage = ({ match }) => (
+  <div>
+    <NavBar pathname='dashboard'/>
+  <Authentification>
+    <DashboardNavBar subpath='notes'/>
+    <CreateNote id={match.params.id}/>
   </Authentification>
   </div>
 )
@@ -221,6 +231,7 @@ const App = () => (
         <Route path='/create/note' component={CreateNotePage} />
         <Route path='/group/:id' component={GroupPage} />
         <Route path='/note/:id' component={NotePage} />
+        <Route path='/edit/:id' component={EditPage} />
         <Route path='/notifications' component={NotificationsPage} />
         <Route path='/assessments' component={AssessmentsPage} />
         <Route path='/search' component={SearchPage} />

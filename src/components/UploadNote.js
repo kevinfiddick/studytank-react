@@ -163,7 +163,22 @@ class Note extends Component {
 
     if(this.props.id){
       this.setState({ id: this.props.id });
+      let that = this;
+        ax.get('/' + 'note' + '/' + this.props.id).then(result => {
+          var note = result.data;
+          console.log(note);
+          that.setState({ title: note.title });
+          that.setState({ subject: note.subject });
+          that.setState({ content: note.content });
+          that.setState({ school: note.school });
+          that.setState({ isFact: note.isFact });
+          that.setState({ language: note.language });
+          that.setState({ textbook: note.textbook });
+            console.log(that.state);
 
+        }).then(res => {
+          console.log(that.state);
+        });
     }
   }
 
@@ -194,7 +209,7 @@ class Note extends Component {
             </Row>
           <hr />
           <br />
-            <Autosaving onChange={this.onContentChange.bind(this)} />
+            <Autosaving value={this.state.content} onChange={this.onContentChange.bind(this)} />
           <br />
               <ConfirmationModal
                 disabled={this.state.title.length == 0}

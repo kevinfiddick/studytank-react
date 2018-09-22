@@ -60,7 +60,8 @@ class Note extends Component {
       this.setState({shareStatus: <span>Sharing... <CircularProgress /></span>});
       var group = this.state.shareGroupSelect;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
-          var note = result.data.value;
+          var note = result.data;
+          console.log(note);
           note.folder == undefined ? note.folder = {} : null;
           note.folder[group] = group;
           if(!note.saved.includes(group)){
@@ -181,7 +182,7 @@ class Note extends Component {
       rating = Math.round(numberRating);
       var author = 'Author: ' + note.authorFirstname + ' ' + note.authorLastname;
       var subject = 'Subject: ' + note.subject;
-      var uploadDate = 'Date Created: ' + note.date;
+      var uploadDate = 'Last Updated: ' + note.date;
       var school;
       note.school == '' ? school = 'School: none' : school = 'School: ' + note.school;
       var isFact;
