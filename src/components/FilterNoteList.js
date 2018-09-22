@@ -170,7 +170,7 @@ export default class FilterNoteList extends React.Component {
 						for(var i = 0; i < sortedList.length; i++){
 							var note = sortedList[i];
 							var stars = '';
-							var r = note.value.personalRating;
+							var r = Math.round(note.value.personalRating);
 							for(var m = 0; m < 5 ;m++){
 								if (r > m){
 									stars +="★";

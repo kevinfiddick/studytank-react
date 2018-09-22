@@ -357,8 +357,8 @@ class Note extends Component {
                   confirm={this.state.shareStatus}
                 >
                 <MuiThemeProvider theme={theme}>
-                  <Button color='secondary' variant='outlined' fullWidth>
-                    <span><AddToGroupIcon /> {'  Share'}</span>
+                  <Button disabled={this.state.myGroups.length == 0} color='secondary' variant='outlined' fullWidth>
+                    <span><AddToGroupIcon /> {'  To Group'}</span>
                   </Button>
                 </MuiThemeProvider>
                 </ConfirmationModal>

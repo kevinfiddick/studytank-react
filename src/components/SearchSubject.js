@@ -72,7 +72,7 @@ export default class SearchUserModal extends React.Component {
         var note = row.value;
 
         var stars = '';
-        var r = note.overallRating;
+        var r = Math.round(note.overallRating);
         for(var m = 0; m < 5 ;m++){
           if (r > m){
             stars +="★";

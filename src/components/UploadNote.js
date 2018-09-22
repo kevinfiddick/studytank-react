@@ -21,6 +21,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField'
 import SimpleMDEReact from "react-simplemde-editor";
 import "simplemde/dist/simplemde.min.css";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const theme = createMuiTheme({
   palette: {
@@ -209,7 +210,16 @@ class Note extends Component {
             </Col>
             </Row>
           <hr />
+
+        <Button onClick={e =>{
+
+          }}
+          variant="contained" color="default"
+        >
+          {'Upload '}<CloudUploadIcon /> <input type="file" style={{display: 'none'}} onChange={ (e) => this.handleChange(e.target.files) } />
+      </Button>
           <br />
+            <br />
           {!this.state.edit &&
             <Autosaving id='upload' onChange={this.onContentChange.bind(this)} />
           }
