@@ -1,0 +1,59 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '@material-ui/icons/\nnpm install @material-ui/icons' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData @material-ui/icons/
+7 silly fetchPackageMetaData npm install @material-ui/icons
+8 silly fetchOtherPackageData @material-ui/icons/
+8 silly fetchOtherPackageData npm install @material-ui/icons
+9 silly cache add args [ '@material-ui/icons/\nnpm install @material-ui/icons', null ]
+10 verbose cache add spec @material-ui/icons/
+10 verbose cache add npm install @material-ui/icons
+11 silly cache add parsed spec Result {
+11 silly cache add   raw: '@material-ui/icons/\nnpm install @material-ui/icons',
+11 silly cache add   scope: null,
+11 silly cache add   name: null,
+11 silly cache add   rawSpec: '@material-ui/icons/\nnpm install @material-ui/icons',
+11 silly cache add   spec: '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/\nnpm install @material-ui/icons',
+11 silly cache add   type: 'local' }
+12 error addLocal Could not install /home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+12 error addLocal npm install @material-ui/icons
+13 silly fetchPackageMetaData Error: ENOENT: no such file or directory, open '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+13 silly fetchPackageMetaData npm install @material-ui/icons'
+13 silly fetchPackageMetaData  error for @material-ui/icons/
+13 silly fetchPackageMetaData npm install @material-ui/icons { Error: ENOENT: no such file or directory, open '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+13 silly fetchPackageMetaData npm install @material-ui/icons'
+13 silly fetchPackageMetaData   errno: -2,
+13 silly fetchPackageMetaData   code: 'ENOENT',
+13 silly fetchPackageMetaData   syscall: 'open',
+13 silly fetchPackageMetaData   path: '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/\nnpm install @material-ui/icons' }
+14 silly rollbackFailedOptional Starting
+15 silly rollbackFailedOptional Finishing
+16 silly runTopLevelLifecycles Starting
+17 silly runTopLevelLifecycles Finishing
+18 silly install printInstalled
+19 verbose stack Error: ENOENT: no such file or directory, open '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+19 verbose stack npm install @material-ui/icons'
+20 verbose cwd /home/tyler/Documents/ReactStudytank/studytank-react
+21 error Linux 4.15.0-34-generic
+22 error argv "/usr/bin/node" "/usr/bin/npm" "install" "@material-ui/icons/\nnpm install @material-ui/icons"
+23 error node v8.10.0
+24 error npm  v3.5.2
+25 error path /home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+25 error path npm install @material-ui/icons
+26 error code ENOENT
+27 error errno -2
+28 error syscall open
+29 error enoent ENOENT: no such file or directory, open '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+29 error enoent npm install @material-ui/icons'
+30 error enoent ENOENT: no such file or directory, open '/home/tyler/Documents/ReactStudytank/studytank-react/@material-ui/icons/
+30 error enoent npm install @material-ui/icons'
+30 error enoent This is most likely not a problem with npm itself
+30 error enoent and is related to npm not being able to find a file.
+31 verbose exit [ -2, true ]

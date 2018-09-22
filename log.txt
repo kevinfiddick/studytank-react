@@ -1,0 +1,52 @@
+[Fri, 31 Aug 2018 23:49:13 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Fri, 31 Aug 2018 23:49:13 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Fri, 31 Aug 2018 23:49:13 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:50:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:52:35 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:52:46 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:52:46 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:52:46 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 31 Aug 2018 23:52:46 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Tue, 04 Sep 2018 16:40:17 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Tue, 04 Sep 2018 16:40:17 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Tue, 04 Sep 2018 16:40:17 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Tue, 04 Sep 2018 16:41:20 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Tue, 04 Sep 2018 16:41:20 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Wed, 05 Sep 2018 19:15:41 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Wed, 05 Sep 2018 19:15:41 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Wed, 05 Sep 2018 19:15:41 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 10 Sep 2018 18:34:04 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 10 Sep 2018 18:34:04 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Mon, 10 Sep 2018 18:34:04 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 10 Sep 2018 18:35:14 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Tue, 11 Sep 2018 23:30:05 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Tue, 11 Sep 2018 23:30:05 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Tue, 11 Sep 2018 23:30:05 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Wed, 12 Sep 2018 00:29:45 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Wed, 12 Sep 2018 00:29:45 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Wed, 12 Sep 2018 00:29:45 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 15 Sep 2018 17:35:42 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sat, 15 Sep 2018 17:35:42 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Sat, 15 Sep 2018 17:35:42 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 15 Sep 2018 17:41:34 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sat, 15 Sep 2018 17:41:34 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Sat, 15 Sep 2018 17:41:34 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Fri, 21 Sep 2018 23:45:30 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Fri, 21 Sep 2018 23:45:30 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Fri, 21 Sep 2018 23:45:30 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Fri, 21 Sep 2018 23:47:51 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /_utils 200
+[Fri, 21 Sep 2018 23:48:58 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/tyler@studytank.com 200
+[Fri, 21 Sep 2018 23:49:56 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Fri, 21 Sep 2018 23:49:56 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Fri, 21 Sep 2018 23:49:56 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 22 Sep 2018 00:28:44 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sat, 22 Sep 2018 00:28:44 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Sat, 22 Sep 2018 00:28:44 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 22 Sep 2018 00:51:31 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sat, 22 Sep 2018 00:51:31 GMT] [info] [<0.000.0>] database files will be saved to ./db
+[Sat, 22 Sep 2018 00:51:31 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.

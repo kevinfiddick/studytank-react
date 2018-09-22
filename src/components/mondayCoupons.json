@@ -1,0 +1,41 @@
+[
+  {
+  "id": "abc1",
+  "company": "First DEALLLLLLLLLLLLLLLLL Great Flood Brewing Co.",
+  "couponTitle": "Half Off All Drafts",
+  "couponImg": "https://mintjuleptours.com/wp-content/uploads/2018/03/great-flood-brewery.jpg",
+  "shortDescription": "Half Off All Drafts",
+  "fullDescription": "Pizza hot off the oven make them great real munchy",
+  "startDate": "05/24/2017",
+  "startTime": "07:30 AM",
+  "endDate":"07/1/2019",
+  "endTime":"07:30 PM",
+  "redeemCode":"PIZZA",
+  "category": "FOODBEV",
+  "logo":"",
+  "latitude":"42.978963",
+  "longitude":"-87.880769",
+  "address": "2245 E St Francis Ave, St Francis, WI 53235",
+  "phoneNumber":"4142128470",
+  "hoursOfOperation": "Mon 2pm-2am Tues 2pm-2am Wed 2pm-2am Thurs 2pm-2am Fri 2pm-2:30am Sat 11am-2:30am Sun 11am-2am",
+  "websiteLink": "N/A"
+},
+{
+    "id": "RedBarHH",
+    "company": "RedBar",
+    "couponTitle": "$1 OFF Just About Everything & $1 OFF Cold Shots",
+    "couponImg":"https://cdn-az.allevents.in/banners/db662ed94692b228aa99e2f4dfec7b1d",
+    "shortDescription": "Happy Hour deal for $1 OFF Just About Everything from 2pm-6pm and $1 OFF Cold Shots from 8pm-Close! ",
+    "fullDescription": "$1 OFF Just About Everything from 2pm-6pm and $1 OFF Cold Shots from 8pm-Close",
+    "startTime": "02:00pm",
+    "endTime": "02:00am",
+    "endDate":"12/31/2018",
+    "redeemCode":"RedBarMonday",
+    "logo":"",
+    "latitude":"42.978963",
+    "longitude":"-87.880769",
+    "address": "2245 E St Francis Ave, St Francis, WI 53235",
+    "phoneNumber":"4142128470",
+    "hoursOfOperation": "Mon 2pm-2am Tues 2pm-2am Wed 2pm-2am Thurs 2pm-2am Fri 2pm-2:30am Sat 11am-2:30am Sun 11am-2am"
+}
+]

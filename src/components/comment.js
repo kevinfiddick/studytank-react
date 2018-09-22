@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import ThumbsUp from '@material-ui-icons/ThumbsUpAlt'
 
 const styles = theme => ({
   root: {
@@ -24,6 +25,7 @@ function Comment (props) {
         <Typography component='p'>
         This is the comment Body all the shazzy that they put here will be great extra sqaggy sidjhsdhskfjsdkfhsdkjfhsdjkfhsdjkfhsdjkfhsdjkfhsdjkfhsdjklfjsdk
         </Typography>
+        <ThumbsUp />
       </Paper>
     </div>
   )
