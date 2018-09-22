@@ -19,6 +19,7 @@ import './Form.css';
 import './Link.css';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import FollowIcon from "@material-ui/icons/PeopleOutline";
+import {Alert} from "reactstrap";
 
 const theme = createMuiTheme({
   palette: {
@@ -27,14 +28,7 @@ const theme = createMuiTheme({
 	     main: '#FF6F00',
 	     dark: '#E65100',
 	     contrastText: '#fff',
-	   },
-
-   	 secondary: {
-   	   light: '#43A047',
-   	   main: '#388E3C',
-   	   dark: '#2E7D32',
-   	   contrastText: '#fff',
-   	 }
+	   }
   }
 });
 
@@ -63,7 +57,8 @@ export default class FilterNoteList extends React.Component {
     members: [],
     follower: false,
     followers: [],
-    invited: false
+    invited: false,
+    confirmation: false
   };
 
   leaveGroup(e) {
@@ -200,27 +195,38 @@ export default class FilterNoteList extends React.Component {
                     members.push(newMember);
                     that.setState({members: members});
                     that.setState({invited: false});
+                    this.setState({confirmation: true});
                     console.log(result);
                   });
                   });
               }}>Join Group</Button>
               </Col>
             </Row>}
+            {this.state.confirmation &&
+              <Alert color="success">
+                You are now a member of this Group
+              </Alert>
+            }
   					<br/>
   					<Typography variant="display1" gutterBottom>
   						{this.state.title} {' '}
               {this.state.member && <ConfirmationModal
-								modalHeader="Leave Group"
+								modalHeader="Unjoin Group"
 								message=
 								{<div>
-                  <Typography variant="subheading" gutterBottom>Are you sure you want to leave this group?</Typography>
+                  <Typography variant="subheading" gutterBottom>Are you sure you want to unjoin this group?</Typography>
+                  <Typography variant="subheading" gutterBottom>This group will no longer be visible from your dashboard.</Typography>
 								</div>}
 								onClick={this.leaveGroup.bind(this)}
-								confirm='Leave'
+								confirm='Unjoin'
 							>
-              <IconButton aria-label="Leave Group">
-                <LeaveIcon />
-              </IconButton>
+
+              <Chip
+                className='leavechip'
+                avatar={<LeaveIcon />}
+                label='Unjoin Group'
+                clickable
+              />
             </ConfirmationModal>}
         		</Typography>
   					<Typography variant="subheading" gutterBottom>
@@ -270,7 +276,8 @@ export default class FilterNoteList extends React.Component {
                 });
               }}
               color='primary'
-              variant={this.state.follower ? 'contained' : 'outlined'}>
+              variant={this.state.follower ? 'contained' : 'outlined'}
+              disabled={this.state.email == ''}>
               <FollowIcon /> {' '}
     					{this.state.follower && <span>Following</span>}
       				{!this.state.follower && <span>Follow</span>}

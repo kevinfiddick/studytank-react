@@ -18,7 +18,11 @@ import LogOff from './components/LogOff'
 import Payroc from './components/Payroc'
 import CreateGroup from './components/CreateGroup'
 import Group from './components/GroupPage'
-import CreateNote from './components/CreateNote'
+import Search from './components/Search'
+import SearchSubject from './components/SearchSubject'
+import Note from './components/NotePage2'
+import CreateNote from './components/SimpleMDE'
+import FilterSubjectList from './components/FilterSubjectList'
 import ProfileSettings from './components/ProfileSettings'
 import Logo from './components/Logo'
 import Notifications from './components/Notifications'
@@ -149,6 +153,13 @@ const GroupPage = ({ match }) => (
     </div>
 )
 
+const NotePage = ({ match }) => (
+    <div>
+      <NavBar pathname='note'/>
+      <br/><Note id={match.params.id}/>
+    </div>
+)
+
 const NotificationsPage = ({ match }) => (
   <div>
     <NavBar pathname='notifications'/>
@@ -169,10 +180,28 @@ const AssessmentsPage = ({ match }) => (
   </div>
 )
 
-const SearchPage = ({ searchterm, match }) => (
+const SearchPage = ({ match }) => (
   <div>
     <NavBar pathname='search'/>
     <Logo />
+    <Search />
+  </div>
+)
+
+const SubjectPage = ({ match }) => (
+  <div>
+    <NavBar pathname='search'/>
+    <Logo />
+    <SearchSubject id={match.params.id}/>
+  </div>
+)
+
+const SubjectListPage = ({ match }) => (
+  <div>
+    <NavBar pathname='search'/>
+    <Logo />
+    <Heading>All Subjects</Heading>
+    <FilterSubjectList/>
   </div>
 )
 
@@ -191,9 +220,12 @@ const App = () => (
         <Route path='/create/group' component={CreateGroupPage} />
         <Route path='/create/note' component={CreateNotePage} />
         <Route path='/group/:id' component={GroupPage} />
+        <Route path='/note/:id' component={NotePage} />
         <Route path='/notifications' component={NotificationsPage} />
         <Route path='/assessments' component={AssessmentsPage} />
         <Route path='/search' component={SearchPage} />
+        <Route path='/subjectlist' component={SubjectListPage} />
+        <Route path='/subject/:id' component={SubjectPage} />
         <Route path='/payroc' component={PayrocPage} />
         <Route path='' component={SearchPage} />
       </Switch>

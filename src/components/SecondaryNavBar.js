@@ -43,7 +43,7 @@ export default class SecondaryTabs extends React.Component {
 	render() {
 		return (
 		<MuiThemeProvider theme={theme}>
-      <Container fluid='true'>
+      <Container fluid={true}>
 				<Row>
           <Col xs="12">
             <AppBar

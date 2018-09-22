@@ -362,7 +362,7 @@ export default class FilterNoteList extends React.Component {
   							content: note.content,
 								author: note.author,
   							authorFirstname: note.authorFirstname,
-  							authorLastname: note.authorFirstname,
+  							authorLastname: note.authorLastname,
   							subject: note.subject,
   							school: note.school,
   							date: note.date,
