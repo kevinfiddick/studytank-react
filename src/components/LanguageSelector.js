@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 export default class Language extends React.Component {
 	render() {
 		return (
-			<FormControl>
+			<FormControl fullWidth>
           <InputLabel htmlFor="language">Language: </InputLabel>
           <Select
             value={this.props.value}

@@ -5,23 +5,21 @@ import ReactMarkdown from 'react-markdown'
 import Typography from '@material-ui/core/Typography'
 import ax from './api';
 import ConfirmationModal from './ConfirmationModal';
+import LanguageSelector from './LanguageSelector';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {Container, Row, Col} from 'reactstrap'
-import BookmarkedIcon from "@material-ui/icons/BookmarkBorder";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import AddToGroupIcon from "@material-ui/icons/GroupAdd";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
 import './Link.css';
+import './Form.css';
 import Autosaving from "./Autosaving";
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField'
+import SimpleMDEReact from "react-simplemde-editor";
+import "simplemde/dist/simplemde.min.css";
 
 const theme = createMuiTheme({
   palette: {
@@ -42,90 +40,80 @@ const theme = createMuiTheme({
 
 class Note extends Component {
   state = {
+    id: Date.now(),
     email: '',
-    author: false,
-    bookmarked: false,
-    rating: '',
+    author: '',
+    authorFirstname: '',
+    authorLastname: '',
     title: '',
     content: '',
-    myGroups: [],
-    info: [],
-    comments: [],
-    commentInput: '',
-    shareGroupSelect: '',
-    shareStatus: 'Share'
+    subject: '',
+    school: '',
+    date: '',
+    isFact: true,
+    language: 'EN',
+    textbook: '',
+    uploadStatus: 'Upload'
   };
 
-  onShareWithGroup(e){
-    if(this.state.shareGroupSelect != ''){
-      this.setState({shareStatus: <span>Sharing... <CircularProgress /></span>});
-      var group = this.state.shareGroupSelect;
-        ax.get('/' + 'note' + '/' + this.props.id).then(result => {
-          var note = result.data.value;
-          note.folder == undefined ? note.folder = {} : null;
-          note.folder[group] = group;
-          if(!note.saved.includes(group)){
-            note.saved.push(group);
-          }
-          //Converts note ratings to JSON
-          if(Object.prototype.toString.call(note.rating) === "[object Array]"){
-            var newrating = {};
-            for(var j = 0; j < note.rating.length; j++){
-              newrating[note.rating[j].uniqueID] = note.rating[j].rating;
-            }
-            note.rating = newrating;
-          }
-          ax({
-             method: 'post',
-             url: '/note',
-             data: {
-               _id: note._id,
-               _rev: note._rev,
-               title: note.title,
-               content: note.content,
-               author: note.author,
-               authorFirstname: note.authorFirstname,
-               authorLastname: note.authorLastname,
-               subject: note.subject,
-               school: note.school,
-               date: note.date,
-               isFact: note.isFact,
-               language: note.language,
-               textbook: note.textbook,
-               saved: note.saved,
-               folder: note.folder,
-               comments: note.comments,
-               rating: note.rating,
-               _attachments:note._attachments
-             }
-          }).then(res => {
-          });
-        });
-    }
+  isFactChange(e){
+      this.setState({ isFact: e.target.checked});
   }
 
-  onShareGroupSelected(e){
-    this.setState({ shareGroupSelect: e.target.id.toLowerCase()});
+  onContentChange = (e) => {
+      this.setState({ content: e });
   }
 
-  ratingChanged(r){
-    ax.get('/' + 'note' + '/' + this.props.id )
-    .then(res => {
-      var note = res.data;
-      if(Object.prototype.toString.call(note.rating) === "[object Array]"){
-        var newrating = {};
-        for(var j = 0; j < note.rating.length; j++){
-          newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+  onChange = (e) => {
+      this.setState({ [e.target.id]: e.target.value });
+  }
+
+  upload(e){
+    this.setState({uploadStatus: <span>Uploading... <CircularProgress /></span>});
+    if(this.props.id){
+      ax.get('/' + 'note' + '/' + this.props.id).then(result => {
+        var note = result.data.value;
+        if(Object.prototype.toString.call(note.rating) === "[object Array]"){
+          var newrating = {};
+          for(var j = 0; j < note.rating.length; j++){
+            newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+          }
+          note.rating = newrating;
         }
-        note.rating = newrating;
-      }
-      note.rating[this.state.email] = r;
+        ax({
+           method: 'post',
+           url: '/note',
+           data: {
+             _id: note._id,
+             _rev: note._rev,
+             title: note.title,
+             content: note.content,
+             author: note.author,
+             authorFirstname: note.authorFirstname,
+             authorLastname: note.authorLastname,
+             subject: note.subject,
+             school: note.school,
+             date: note.date,
+             isFact: note.isFact,
+             language: note.language,
+             textbook: note.textbook,
+             saved: note.saved,
+             folder: note.folder,
+             comments: note.comments,
+             rating: note.rating,
+             _attachments:note._attachments
+           }
+        }).then(res => {
+            window.location.replace("/note/"+note.id);
+        });
+      });
+    }
+    else{
+      var note = this.state;
       ax({
-         method: 'post',
-         url: '/note',
+         method: 'put',
+         url: '/note/' + note.id,
          data: {
-           _id: note._id,
-           _rev: note._rev,
            title: note.title,
            content: note.content,
            author: note.author,
@@ -137,75 +125,46 @@ class Note extends Component {
            isFact: note.isFact,
            language: note.language,
            textbook: note.textbook,
-           saved: note.saved,
-           folder: note.folder,
-           comments: note.comments,
-           rating: note.rating,
-           _attachments:note._attachments
+           saved: [],
+           folder: {},
+           comments: [],
+           rating: {}
          }
       }).then(res => {
+          window.location.replace("/note/"+note.id);
       });
-    });
+    }
   }
 
   componentDidMount(){
-    const email = localStorage.getItem('email') || '';
+    const email = localStorage.getItem('email');
     this.setState({ email: email });
-    let that = this;
-    ax.get('/' + 'note' + '/' + this.props.id )
-    .then(res => {
-      var note = res.data;
-      console.log(note);
-      var bookmarked = note.saved.includes(email);;
-      var rating = '';
-      var info = [];
-      var numberRating;
-      var author = false;
+    this.setState({ author: email });
+    const firstname = localStorage.getItem('firstname');
+    const lastname = localStorage.getItem('lastname');
+    const school = localStorage.getItem('school');
+    this.setState({ authorFirstname: firstname });
+    this.setState({ authorLastname: lastname });
+    this.setState({ school: school });
+    var today;
+    var now = new Date();
+    var month = (now.getMonth() + 1);
+    var day = now.getDate();
+    var hour = now.getHours();
+    var min = now.getMinutes();
+    if(month < 10)
+        month = "0" + month;
+    if(day < 10)
+        day = "0" + day;
+    if(min < 10)
+        min = "0" + min;
+    today = now.getFullYear() + '-' + month + '-' + day;
+    this.setState({  date: today });
 
-      if(note.rating.hasOwnProperty(this.state.email)){
-          numberRating = note.rating[this.state.email];
-      }
-      else{
-        var sum = 0;
-        var total = 0;
-        for (var key in note.rating) {
-          if (note.rating.hasOwnProperty(key)) {
-              var rating = note.rating[key];
-              sum += rating;
-              total += 1;
-          }
-        }
-        total > 0 ?
-        numberRating = sum/total:
-        numberRating = 0;
-      }
-      rating = Math.round(numberRating);
-      var author = 'Author: ' + note.authorFirstname + ' ' + note.authorLastname;
-      var subject = 'Subject: ' + note.subject;
-      var uploadDate = 'Date Created: ' + note.date;
-      var school;
-      note.school == '' ? school = 'School: none' : school = 'School: ' + note.school;
-      var isFact;
-      note.isFact ? isFact = 'Factual' : isFact = 'Opinion';
-      var reference;
-      note.textbook == '' ? reference = 'No References Listed' : reference = 'Reference: ' + note.textbook;
-      info = [author, subject, uploadDate, school, isFact, reference];
-      author = note.author == email;
-      that.setState({ author: author });
-      that.setState({ title: note.title });
-      that.setState({ content: note.content });
-      that.setState({ comments: note.comments });
-      that.setState({ bookmarked: bookmarked });
-      that.setState({ rating: rating });
-      that.setState({ info: info });
+    if(this.props.id){
+      this.setState({ id: this.props.id });
 
-      ax.get('/' + 'group' + '/_design/dashboard/_view/' + 'mygroups' + '?key=\"' + email + '\"')
-      .then(res => {
-          console.log(res.data.rows);
-          const groupsArray = res.data.rows;
-          that.setState({ myGroups: groupsArray });
-      });
-    });
+    }
   }
 
   render() {
@@ -213,27 +172,93 @@ class Note extends Component {
     <div>
       <Container>
         <Col xs={{ size: 12 }}>
+        <br />
           <Row>
             <Typography  variant='display1' style={{position: 'relative', left: '10px'}}>
                 Upload Note
             </Typography>
           </Row>
-          <br />
             <Row>
+              <Col xs={{ size: 12 }}>
               <TextField
                 required
                 id='title'
-                onChange={this.onChange}
+                value={this.state.title}
+                error={this.state.title == ''}
+                onChange={this.onChange.bind(this)}
                 label='Note Title'
                 margin='normal'
                 fullWidth
-                required
               />
+            </Col>
             </Row>
           <hr />
           <br />
-            <Autosaving id="content" />
+            <Autosaving onChange={this.onContentChange.bind(this)} />
           <br />
+              <ConfirmationModal
+                disabled={this.state.title.length == 0}
+                modalHeader="Finishing Touches..."
+                message=
+                {<div>
+                    <TextField
+                      required
+                      id='subject'
+                      value={this.state.subject}
+                      onChange={this.onChange.bind(this)}
+                      label='Subject'
+                      margin='normal'
+                      fullWidth
+                    />
+                    <TextField
+                      id='school'
+                      value={this.state.school}
+                      onChange={this.onChange.bind(this)}
+                      label='School'
+                      margin='normal'
+                      fullWidth
+                    />
+                    <TextField
+                      id='textbook'
+                      value={this.state.textbook}
+                      onChange={this.onChange.bind(this)}
+                      label='Textbook or Reference'
+                      margin='normal'
+                      fullWidth
+                    />
+                    <TextField
+                      id='language'
+                      value={this.state.language}
+                      onChange={this.onChange.bind(this)}
+                      label='Language'
+                      margin='normal'
+                      fullWidth
+                    />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.isFact}
+                        onChange={this.isFactChange.bind(this)}
+                        color="primary"
+                      />
+                    }
+                    label="Factual"
+                  />
+                </div>}
+                onClick={this.upload.bind(this)}
+                confirm={this.state.uploadStatus}
+              >
+
+              <Button
+                variant="contained"
+                color="primary"
+                className="wide"
+              >
+                    Finish
+              </Button>
+              <br/>
+              <br/>
+          </ConfirmationModal>
     	  </Col>
       </Container>
     </div>
