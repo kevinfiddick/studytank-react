@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col} from "reactstrap";
+import {Container, Row, Col} from "reactstrap";
 import {Link} from 'react-router-dom';
 
 const container = {
@@ -12,6 +12,7 @@ const container = {
 export default class Logo extends React.Component {
 	render() {
 		return (
+			<Container fluid={true}>
 			<Row>
 				<Col xs="12">
 					<br/>
@@ -35,6 +36,7 @@ export default class Logo extends React.Component {
 					<br/>
 				</Col>
 			</Row>
+			</Container>
 		);
 	}
 }

@@ -108,7 +108,7 @@ export default class IconLabelTabs extends React.Component {
     <MuiThemeProvider theme={theme}>
       <Container fluid={true}>
         <Row>
-          <Col xs="12">
+          <Col xs="12" style={{margin: '0px', padding: '0px'}}>
             <AppBar
 							position="static"
 							color="primary"
