@@ -45,7 +45,9 @@ export default class Comment extends React.Component {
     commentID: '',
     id: '',
     show: false,
-    now: ''
+    now: '',
+    commentators: [],
+    commentID: ''
   }
 
   like = () => {
@@ -165,6 +167,7 @@ export default class Comment extends React.Component {
         replyTo: this.state.commentID
       }
       let that = this;
+        console.log('fuck');
       ax.get('/' + 'note' + '/' + this.props.id )
       .then(res => {
         var note = res.data;
@@ -216,8 +219,50 @@ export default class Comment extends React.Component {
              _attachments:note._attachments
            }
         }).then(res => {
+          this.setState({show: true});
+          notifyCommentators();
         });
       });
+
+      var b = 0;
+      var fullname = localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname');
+      const notifyCommentators = () => {
+       if(b < that.state.commentators.length) {
+         ax.get('/' + 'user' + '/' + that.state.commentators[b] )
+         .then(rs => {
+           var user = rs.data;
+           if(!user.hasOwnProperty('username')){
+             user.username =
+               user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+           }
+           user.notifications.push({
+             id: Date.now(),
+             seen: false,
+             page: "note",
+             linkID: that.props.id,
+             phrase: fullname + ' replied to your comment on ' + that.props.title
+           });
+           ax({
+             method: 'post',
+             url: '/user',
+             data: {
+               _id: user._id,
+               _rev: user._rev,
+               email: user.email,
+               username: user.username,
+               password: user.password,
+               firstname: user.firstname,
+               lastname: user.lastname,
+               school: user.school,
+               notifications: user.notifications
+             }
+           }).then(r => {
+             b++;
+             notifyCommentators();
+           });
+         });
+       }
+     }
   }
 
   componentWillMount(){
@@ -246,8 +291,14 @@ export default class Comment extends React.Component {
     badge ? this.setState({ badge: badge }): null;
     var replies = this.props.replies;
     replies ? this.setState({ replies: replies }): null;
+    var allCommentators = [];
+    for(var i = 0; i < replies.length; i++){
+      replies[i].commentator != this.state.email ? allCommentators.push(replies[i].commentator) : null;
+    }
+    this.setState({ commentators: allCommentators });
 
     this.setState({ email: localStorage.getItem('email')});
+    this.setState({ commentID: this.props.commentID });
 
     var initials = name.match(/\b\w/g) || [];
     initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
@@ -349,7 +400,9 @@ export default class Comment extends React.Component {
         variant="filled"
         autoFocus
       />
-      <Button variant='contained' style={{marginRight: '6px'}}> Reply </Button></div>}
+    <Button variant='contained' style={{marginRight: '6px'}}
+      onClick={this.publishReply.bind(this)}
+    > Reply </Button></div>}
     </Col>
     </Grid></div>
   );}

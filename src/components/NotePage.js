@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Container, Row, Col} from 'reactstrap'
+import {Container, Row, Col, Alert} from 'reactstrap'
 import BookmarkedIcon from "@material-ui/icons/BookmarkBorder";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import AddToGroupIcon from "@material-ui/icons/GroupAdd";
@@ -246,6 +246,7 @@ class Note extends Component {
     <div>
       <Container>
         <Col xs={{ size: 12 }}>
+          {this.state.email == '' && <div><Alert color='danger'> You Are Not Signed In! Some Content On This Note Page Will Be Disabled </Alert></div>}
           <Row>
             <Typography  variant='display1' style={{position: 'relative', left: '10px'}}>
                 {this.state.title}
@@ -427,7 +428,7 @@ class Note extends Component {
               <Typography variant='subheading'>
                 <ul>
                 {this.state.info.map(info =>
-                  <li>{info}</li>
+                  <li key={info}>{info}</li>
                 )}
                 </ul>
               </Typography>
@@ -437,7 +438,7 @@ class Note extends Component {
           <Typography variant='display1'>
               Comments
           </Typography>
-          <Comments id={this.props.id} />
+          <Comments id={this.props.id} title={this.state.title} />
     	  </Col>
       </Container>
     </div>

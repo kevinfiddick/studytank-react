@@ -131,12 +131,54 @@ class Note extends Component {
            }
         }).then(res => {
           that.setState({ success: true });
+          notifyCommentators();
         });
       });
+
+      var b = 0;
+      var fullname = localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname');
+      const notifyCommentators = () => {
+       if(b < that.state.commentators.length) {
+         ax.get('/' + 'user' + '/' + that.state.commentators[b] )
+         .then(rs => {
+           var user = rs.data;
+           if(!user.hasOwnProperty('username')){
+             user.username =
+               user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+           }
+           user.notifications.push({
+             id: Date.now(),
+             seen: false,
+             page: "note",
+             linkID: that.props.id,
+             phrase: fullname + ' also commented on ' + that.props.title
+           });
+           ax({
+             method: 'post',
+             url: '/user',
+             data: {
+               _id: user._id,
+               _rev: user._rev,
+               email: user.email,
+               username: user.username,
+               password: user.password,
+               firstname: user.firstname,
+               lastname: user.lastname,
+               school: user.school,
+               notifications: user.notifications
+             }
+           }).then(r => {
+             b++;
+             notifyCommentators();
+           });
+         });
+       }
+     }
   }
 
   setComments = (comments) => {
     var stateComments = [];
+    var allCommentators = [];
     for(var i = 0; i < comments.length; i++){
       var likes = comments[i].likes.length;
       likes == undefined ? likes = 0: null;
@@ -151,6 +193,7 @@ class Note extends Component {
           replies: []
         }
         stateComments.push(comment);
+        comments[i].commentator != this.state.email ? allCommentators.push(comments[i].commentator) : null;
       }
       else{
         var reply = {
@@ -160,7 +203,8 @@ class Note extends Component {
           name: comments[i].commentatorFirstname + ' ' + comments[i].commentatorLastname,
           type: 'reply',
           body: comments[i].body,
-          replyTo: comments[i].replyTo
+          replyTo: comments[i].replyTo,
+          commentator: comments[i].commentator
         }
         var initials = reply.name.match(/\b\w/g) || [];
         initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
@@ -173,6 +217,7 @@ class Note extends Component {
       }
     }
     this.setState({ comments: stateComments });
+    this.setState({ commentators: allCommentators });
 
   }
 
@@ -228,6 +273,7 @@ class Note extends Component {
       </MuiThemeProvider>
     </div>}
         <hr />
+      {this.state.comments.length == 0 && <Typography variant='headline'> No Comments to Show</Typography>}
       {this.state.comments.map(comment =>
         <div key={comment.id}>
           <Comment
@@ -238,6 +284,7 @@ class Note extends Component {
             name={comment.name}
             badge={comment.type}
             replies={comment.replies}
+            title={this.props.title}
           >
             {comment.body}
           </Comment>
