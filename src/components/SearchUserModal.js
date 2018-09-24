@@ -61,9 +61,37 @@ export default class SearchUserModal extends React.Component {
   }
 
   componentDidMount(){
-    let that = this;
     var email = localStorage.getItem('email');
     this.setState({email: email});
+
+    let that = this;
+    if(localStorage.getItem('firstname') == '' || localStorage.getItem('firstname') == null ){
+        ax.get('/user/' + email)
+          .then((result) => {
+              const user = result.data;
+              if (user.password === localStorage.getItem('password')) {
+                localStorage.setItem('email', user.email);
+                localStorage.setItem('firstname', user.firstname);
+                localStorage.setItem('lastname', user.lastname);
+                localStorage.setItem('school', user.school);
+                if(!user.hasOwnProperty('username')){
+                  user.username =
+                    user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+                }
+                localStorage.setItem('username', user.username);
+
+                const MONTH_IN_MS = 2678400000;
+                var grace = 3 * MONTH_IN_MS;
+                localStorage.setItem('expires', Date.now() + grace);
+
+                window.location.replace("/dashboard/notes");
+              }
+              else{
+                localStorage.clear();
+              }
+            });
+    }
+
     var members = this.props.members.map(a => a.email);
     this.setState({members: members});
     ax.get('/user/_design/user/_view/name')

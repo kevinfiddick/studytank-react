@@ -41,8 +41,24 @@ export default class Authentification extends React.Component {
                 if (res.data.password === password) {
                   this.setState({email: email});
                   this.setState({content: 'children'});
+									var user = res.data;
+	                  localStorage.setItem('email', user.email);
+	                  localStorage.setItem('password', user.password);
+	                  localStorage.setItem('firstname', user.firstname);
+	                  localStorage.setItem('lastname', user.lastname);
+	                  localStorage.setItem('school', user.school);
+	                  if(!user.hasOwnProperty('username')){
+	                    user.username =
+	                      user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
+	                  }
+	                  localStorage.setItem('username', user.username);
+
+	                  const MONTH_IN_MS = 2678400000;
+	                  var grace = 3 * MONTH_IN_MS;
+	                  localStorage.setItem('expires', Date.now() + grace);
                 }
                 else{
+				          localStorage.clear();
                   this.setState({content: 'login'});
                 }
       				})
