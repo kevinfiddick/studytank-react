@@ -17,7 +17,6 @@ class ConfirmationModal extends React.Component {
   }
 
   toggle() {
-    console.log(this.state.disabled);
     if(!this.state.disabled){
       this.setState({
         modal: !this.state.modal
@@ -30,23 +29,30 @@ class ConfirmationModal extends React.Component {
     }
   }
 
-  componentDidMount() {
-    console.log(this.props.disabled);
+  componentWillMount() {
 
     this.setState({
       disabled: this.props.disabled || false
     });
   }
 
+  onSubmit(e){
+      e.preventDefault();
+      this.props.onClick(e);
+      this.setState({
+        modal: false
+      });
+  }
+
   componentDidUpdate(prevProps) {
     if(!equal(this.props.disabled, prevProps.disabled)) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
     {
-      console.log(this.props.disabled);
 
       this.setState({
         disabled: this.props.disabled || false
       });
     }
+
 }
 
   render() {
@@ -55,7 +61,7 @@ class ConfirmationModal extends React.Component {
         <span onClick={this.toggle}>{this.props.children}</span>
       {!this.state.disabled &&
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
-        <form onSubmit={this.props.onClick}>
+        <form onSubmit={this.onSubmit.bind(this)}>
           <ModalHeader toggle={this.toggle}>{this.props.modalHeader}</ModalHeader>
           <ModalBody>
           {this.props.message}

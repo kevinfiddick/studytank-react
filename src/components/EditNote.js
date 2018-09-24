@@ -154,7 +154,6 @@ class Note extends Component {
     ax.get('/' + 'note' + '/' + this.props.id )
     .then(res => {
       var note = res.data;
-      console.log(note);
       var bookmarked = note.saved.includes(email);;
       var rating = '';
       var info = [];
@@ -200,7 +199,6 @@ class Note extends Component {
 
       ax.get('/' + 'group' + '/_design/dashboard/_view/' + 'mygroups' + '?key=\"' + email + '\"')
       .then(res => {
-          console.log(res.data.rows);
           const groupsArray = res.data.rows;
           that.setState({ myGroups: groupsArray });
       });

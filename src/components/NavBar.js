@@ -63,7 +63,7 @@ export default class IconLabelTabs extends React.Component {
     unread: 0
 	};
 
-	componentDidMount() {
+	componentWillMount() {
 		var currentLocation = this.props.pathname;
 		switch(currentLocation){
 			case 'dashboard':

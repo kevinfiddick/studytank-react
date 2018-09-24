@@ -91,7 +91,6 @@ export default class FilterNoteList extends React.Component {
         }).then(result => {
           that.setState({member: false});
           that.setState({members: group.members});
-          console.log(result);
         });
       })
   }
@@ -196,7 +195,6 @@ export default class FilterNoteList extends React.Component {
                     that.setState({members: members});
                     that.setState({invited: false});
                     this.setState({confirmation: true});
-                    console.log(result);
                   });
                   });
               }}>Join Group</Button>
@@ -271,7 +269,6 @@ export default class FilterNoteList extends React.Component {
                   }).then(result => {
                     that.setState({follower: !that.state.follower});
                     that.setState({followers: group.followers});
-                    console.log(result);
                   });
                 });
               }}

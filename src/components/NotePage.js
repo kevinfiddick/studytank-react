@@ -19,22 +19,44 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
+import OpenIcon from '@material-ui/icons/GetApp';
 import {Link} from 'react-router-dom';
 import './Link.css';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import Comments from './Comments'
 
 const theme = createMuiTheme({
   palette: {
 	   primary: {
-       light: '#757575',
-       main: '#616161',
-       dark: '#424242',
-       contrastText: '#fff',
+       light: '#FFEE58',
+       main: '#FFEB3B',
+       dark: '#FDD835',
+       contrastText: '#000',
 	   },
 	   secondary: {
 	     light: '#00796B',
 	     main: '#FF6F00',
 	     dark: '#E65100',
 	     contrastText: '#fff',
+	   }
+  }
+});
+
+const badges = createMuiTheme({
+  palette: {
+      primary: {
+         light: '#FFEE58',
+         main: '#FFEB3B',
+         dark: '#FDD835',
+         contrastText: '#000',
+      },
+	   secondary: {
+	     light: '#43A047',
+	     main: '#388E3C',
+	     dark: '#2E7D32',
+	     contrastText: '#fff'
 	   }
   }
 });
@@ -52,7 +74,8 @@ class Note extends Component {
     comments: [],
     commentInput: '',
     shareGroupSelect: '',
-    shareStatus: 'Share'
+    shareStatus: 'Share',
+    attachments: []
   };
 
   onShareWithGroup(e){
@@ -61,7 +84,6 @@ class Note extends Component {
       var group = this.state.shareGroupSelect;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
           var note = result.data;
-          console.log(note);
           note.folder == undefined ? note.folder = {} : null;
           note.folder[group] = group;
           if(!note.saved.includes(group)){
@@ -155,13 +177,19 @@ class Note extends Component {
     ax.get('/' + 'note' + '/' + this.props.id )
     .then(res => {
       var note = res.data;
-      console.log(note);
       var bookmarked = note.saved.includes(email);;
       var rating = '';
       var info = [];
       var numberRating;
       var author = false;
-
+      //Converts note ratings to JSON
+      if(Object.prototype.toString.call(note.rating) === "[object Array]"){
+        var newrating = {};
+        for(var j = 0; j < note.rating.length; j++){
+          newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+        }
+        note.rating = newrating;
+      }
       if(note.rating.hasOwnProperty(this.state.email)){
           numberRating = note.rating[this.state.email];
       }
@@ -198,10 +226,15 @@ class Note extends Component {
       that.setState({ bookmarked: bookmarked });
       that.setState({ rating: rating });
       that.setState({ info: info });
+      if(note._attachments){
+        var attachments = Object.keys(note._attachments);
+        if(attachments.length > 0){
+          that.setState({ attachments: attachments });
+        }
+      }
 
       ax.get('/' + 'group' + '/_design/dashboard/_view/' + 'mygroups' + '?key=\"' + email + '\"')
       .then(res => {
-          console.log(res.data.rows);
           const groupsArray = res.data.rows;
           that.setState({ myGroups: groupsArray });
       });
@@ -360,17 +393,31 @@ class Note extends Component {
                   <Button disabled={this.state.myGroups.length == 0} color='secondary' variant='outlined' fullWidth>
                     <span><AddToGroupIcon /> {'  To Group'}</span>
                   </Button>
+
                 </MuiThemeProvider>
                 </ConfirmationModal>
             </Col>
           </Row>
           <br />
           <hr />
-
+            {this.state.attachments.map(file =>
+              <span key={file} style={{display: 'inline-block', marginRight: '5px', marginTop: '5px'}}>
+                <a target="_blank" rel="noopener noreferrer" href={`http://localhost:5984/note/${this.props.id}/${file}`}>
+              <Button
+                variant="contained" color="default"
+                className='darklink'
+              >
+                 <span>{file}<span style={{marginLeft: '5px'}}><OpenIcon /></span></span>
+              </Button>
+              </a>
+              </span>
+            )}
           <br />
+          <br />
+          {this.state.content.length > 0 &&
           <div style={{border: '1px solid lightgrey', padding: '10px'}} >
             <ReactMarkdown source={this.state.content} escapeHtml={false}/>
-          </div>
+          </div>}
           <br />
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -387,17 +434,10 @@ class Note extends Component {
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <hr />
-          {//Comment Input
-          }
-          <hr />
           <Typography variant='display1'>
               Comments
           </Typography>
-          {/*this.state.comments.map(comment =>
-            <div>
-              <Comment comment={comment}/>
-            </div>
-          )*/}
+          <Comments id={this.props.id} />
     	  </Col>
       </Container>
     </div>

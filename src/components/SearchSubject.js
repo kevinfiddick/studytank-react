@@ -92,7 +92,6 @@ export default class SearchUserModal extends React.Component {
           var group = row.value;
           notes.push(group);
         }
-        console.log(notes);
         that.setState({notes: notes});
         that.setState({results: notes});
       });

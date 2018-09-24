@@ -37,7 +37,6 @@ export default class Notifications extends React.Component {
 	              notification.status == 'seen' ? notification.seen = true :  notification.seen = false;
 	              delete notification.status;
               }
-              console.log(notification);
               user.notifications[i] = notification;
             }
             this.setState({notifications: user.notifications});

@@ -10,7 +10,7 @@ import { sha256 } from './Encoder';
 import TermsAndConditions from './TermsAndConditions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import {Alert} from "reactstrap";
 
 export default class RegisterForm extends React.Component {
 
@@ -23,24 +23,29 @@ export default class RegisterForm extends React.Component {
           school: '',
           passwordInput: '',
           confirmPasswordInput: '',
-          checkBox: false
+          checkBox: false,
+          errorStatus: ''
         };
     }
     onChange = (e) => {
+        this.setState({ errorStatus: ''});
         // Because we named the inputs to match their corresponding values in state, it's
         // super easy to update the state
         this.setState({ [e.target.id]: e.target.value });
     }
     onCheck = (e) => {
+        this.setState({ errorStatus: ''});
         // Because we named the inputs to match their corresponding values in state, it's
         // super easy to update the state
         this.setState({ [e.target.value]: e.target.checked });
     }
 
     onSubmit = (e) => {
+        this.setState({ errorStatus: ''});
         e.preventDefault();
         // get our form data out of state
         const user = this.state;
+        let that = this
 
         if(user.passwordInput === user.confirmPasswordInput){
           sha256(user.passwordInput).then(function(value){
@@ -72,12 +77,11 @@ export default class RegisterForm extends React.Component {
               localStorage.setItem('expires', Date.now() + grace);
               window.location.replace("/dashboard/notes");
             }).catch(function (error) {
-              console.log(error);
               if(error.response.status == 409){
-                alert("A user is already registered under " + user.email);
+                that.setState({ errorStatus: "A user is already registered under " + user.email});
                 window.location.replace("/login");
               } else{
-                alert("An error occured, please try again later.");
+                that.setState({ errorStatus: "An error occured, please try again later."});
               }
             });
             }
@@ -85,7 +89,6 @@ export default class RegisterForm extends React.Component {
               var username = user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase() + '-' + counter;
               ax.get('/user/_design/user/_view/username?key="' + username + '"')
               .then((result) => {
-                console.log(result);
                 if(result.data.rows.length > 0 ){
                   generateUsername(counter+1)
                 }else{
@@ -99,11 +102,11 @@ export default class RegisterForm extends React.Component {
           });
         }
         else{
-          alert("Your passwords do not match");
+          this.setState({ errorStatus: "Your passwords do not match"});
         }
     }
 
-    componentDidMount(){
+    componentWillMount(){
       //checks if localStorage is expired
       const MONTH_IN_MS = 2678400000;
       var expiration = 0;
@@ -115,7 +118,6 @@ export default class RegisterForm extends React.Component {
           email = localStorage.getItem("email");
           password = localStorage.getItem("password");
           expiration = localStorage.getItem("expires");
-          console.log(password);
           if(expiration < Date.now()){
               localStorage.clear();
           }
@@ -212,6 +214,11 @@ export default class RegisterForm extends React.Component {
                       />
                     <br/>
                       <TermsAndConditions variant='outlined' color='default' className="button">Terms and Conditions</TermsAndConditions>{' '}
+                        {this.state.errorStatus != '' &&
+                          <Alert color="danger">
+                            {this.state.errorStatus.split('\n').map((item, i) => <div key={i}>{item}</div>)}
+                          </Alert>
+                        }
                     <Button type='submit' variant='outlined' color='primary' className="button">
                       Submit
                     </Button>

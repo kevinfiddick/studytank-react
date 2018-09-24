@@ -18,7 +18,7 @@ export default class Authentification extends React.Component {
 	* - UPLOADED NOTES
 	* - BOOKMARKED NOTES
 	*/
-	componentDidMount() {
+	componentWillMount() {
     //checks if localStorage is expired
     const MONTH_IN_MS = 2678400000;
     var expiration = 0;

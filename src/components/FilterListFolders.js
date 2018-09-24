@@ -85,7 +85,6 @@ export default class FilterNoteList extends React.Component {
 				 if(result.data.author === this.state.username){
 			 		ax.delete('/' + 'note' + '/' + deleteID + '?rev=' + result.data._rev )
 			 			.then(res => {
-							console.log(res.data);
 							i++;
 							recursiveDelete();
 			 			});
@@ -93,7 +92,6 @@ export default class FilterNoteList extends React.Component {
 						var note = result.data;
 						var index = note.saved.indexOf(this.state.username);
 						note.saved.splice(index, 1);
-						console.log(note);
 						ax({
 							method: 'post',
 							url: '/note',
@@ -118,7 +116,6 @@ export default class FilterNoteList extends React.Component {
 							}
 						}).then(res => {
 							i++;
-							console.log(i +" < "+ deleteIDs.length);
 							recursiveDelete();
 						});
 					}
@@ -141,7 +138,6 @@ export default class FilterNoteList extends React.Component {
 	 				 if(result.data.author === this.state.username){
 	 			 		ax.delete('/' + 'note' + '/' + deleteID + '?rev=' + result.data._rev )
 	 			 			.then(res => {
-	 							console.log(res.data);
 	 							i++;
 	 							recursiveDelete();
 	 			 			});
@@ -149,7 +145,6 @@ export default class FilterNoteList extends React.Component {
 	 						var note = result.data;
 	 						var index = note.saved.indexOf(this.state.username);
 	 						note.saved.splice(index, 1);
-	 						console.log(note);
 	 						ax({
 	 							method: 'post',
 	 							url: '/note',
@@ -174,7 +169,6 @@ export default class FilterNoteList extends React.Component {
 	 							}
 	 						}).then(res => {
 	 							i++;
-	 							console.log(i +" < "+ deleteIDs.length);
 	 							recursiveDelete();
 	 						});
 	 					}

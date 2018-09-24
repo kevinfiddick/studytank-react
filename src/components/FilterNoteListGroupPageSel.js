@@ -134,7 +134,6 @@ export default class FilterNoteList extends React.Component {
 						//calculate overall rating or find personal rating
 						for(var i = 0; i < viewList.length; i++){
 							var note = viewList[i];
-							console.log(note.value.rating);
 							if(note.value.rating.hasOwnProperty(this.state.email)){
 									note.value.personalRating = note.value.rating[this.state.email];
 							}
@@ -376,13 +375,12 @@ export default class FilterNoteList extends React.Component {
   							_attachments: note._attachments
 							}
 						}).then(res => {
-							console.log(res);
 							i++;
 							recursiveRemove();
 						});
 			 });
 		  }else{
-				null;
+				window.location.reload();
 		  }
 		 }
 		 recursiveRemove();
@@ -439,7 +437,7 @@ export default class FilterNoteList extends React.Component {
 
 	 			 });
 	 		  }else{
-	 			 	null;
+	 			 	window.location.reload();
 	 		  }
 	 		 }
 	 		 recursiveAddToFolder();
@@ -496,7 +494,7 @@ export default class FilterNoteList extends React.Component {
 
 	 			 });
 	 		  }else{
-	 			 	null;
+	 			 	window.location.reload();
 	 		  }
 	 		 }
 	 		 recursiveAddToFolder();
@@ -815,7 +813,7 @@ export default class FilterNoteList extends React.Component {
 											label: 'buttonLabel'
 										}}
 										onClick={(e) => {
-											this.setState({ moveFolderSelect: {email}.email.toLowerCase()});
+											this.setState({ moveFolderSelect: this.props.id});
 										}}
 
 									>

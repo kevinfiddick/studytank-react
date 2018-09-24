@@ -23,13 +23,15 @@ class Comment extends Component {
     name ? this.setState({ name: name }): null;
     var color = this.props.color;
     color ? this.setState({ color: color }): null;
+    var badge = this.props.badge;
+    badge ? this.setState({ badge: badge }): null;
   }
 
   return (
     <div>
     <Grid container spacing={24}>
-    <Grid item xs={10}>
-      <Paper elevation={2}>
+    <Grid item xs={12}>
+      <Paper elevation={4}>
         <Typography variant='headline' component='h3'>
           {this.state.name}{this.props.badge && <Chip label={this.state.badge} color={this.state.color} />}
         </Typography>

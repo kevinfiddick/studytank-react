@@ -64,7 +64,6 @@ export default class LogInForm extends React.Component {
 
             })
             .catch(function (error) {
-              console.log(error);
               if(error.response.status == 404){
                 var errorStatus = "No users are registered under \n" + that.state.email +
                   "\n Please try another email or Register for free";
@@ -77,7 +76,7 @@ export default class LogInForm extends React.Component {
               e.preventDefault();
     }
 
-    componentDidMount(){
+    componentWillMount(){
       //checks if localStorage is expired
       const MONTH_IN_MS = 2678400000;
       var expiration = 0;
@@ -89,7 +88,6 @@ export default class LogInForm extends React.Component {
           email = localStorage.getItem("email");
           password = localStorage.getItem("password");
           expiration = localStorage.getItem("expires");
-          console.log(password);
           if(expiration < Date.now()){
               localStorage.clear();
           }

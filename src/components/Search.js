@@ -72,6 +72,14 @@ export default class SearchUserModal extends React.Component {
       for(var i = 0; i < result.data.rows.length; i++){
         var row = result.data.rows[i];
         var note = row.value;
+        //Converts note ratings to JSON
+        if(Object.prototype.toString.call(note.rating) === "[object Array]"){
+          var newrating = {};
+          for(var j = 0; j < note.rating.length; j++){
+            newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+          }
+          note.rating = newrating;
+        }
         if(note.rating.hasOwnProperty(this.state.email)){
             note.personalRating = note.rating[this.state.email];
         }
@@ -91,7 +99,6 @@ export default class SearchUserModal extends React.Component {
         }
         var stars = '';
         var r = Math.round(note.personalRating);
-        console.log(note);
         for(var m = 0; m < 5 ;m++){
           if (r > m){
             stars +="★";

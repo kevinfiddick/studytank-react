@@ -49,7 +49,6 @@ export default class CreateGroupForm extends React.Component {
         ax.get('/user/' + this.state.email)
           .then((result) => {
             var user = result.data;
-              console.log(result);
               if(!user.hasOwnProperty('username')){
                 user.username =
                   user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase();
@@ -121,7 +120,7 @@ export default class CreateGroupForm extends React.Component {
       }
     }
 
-    componentDidMount(){
+    componentWillMount(){
       const email = localStorage.getItem('email');
   		this.setState({email: email});
       var school_data = localStorage.getItem('school');

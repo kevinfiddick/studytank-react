@@ -27,9 +27,8 @@ export default class SecondaryTabs extends React.Component {
 		value: 5
 	};
 
-	componentDidMount() {
+	componentWillMount() {
 		var currentLocation = this.props.subpath;
-		console.log(currentLocation)
 		switch(currentLocation){
 			case 'notes':
 				this.setState({ value: 0 });
