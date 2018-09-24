@@ -239,6 +239,7 @@ const App = () => (
         <Route path='/subject/:id' component={SubjectPage} />
         <Route path='/payroc' component={PayrocPage} />
         <Route path='' component={SearchPage} />
+        <Route path='/*' component={"index.html"} />
       </Switch>
     </div>
   </Router>
