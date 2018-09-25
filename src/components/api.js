@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: `https://studytank.com:6948/`
+  baseURL: `http://localhost:5948/`
 });
