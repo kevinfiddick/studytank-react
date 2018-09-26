@@ -219,27 +219,26 @@ const App = () => (
   <Router>
     <div>
       <Switch>
-        <Route path='/register' component={RegisterPage} />
-        <Route path='/login' component={LogInPage} />
-        <Route path='/dashboard/notes' component={DashboardNotesPage}/>
-        <Route path='/dashboard/notes?' component={DashboardNotesPage}/>
-        <Route path='/dashboard/groups' component={DashboardGroupsPage} />
-        <Route path='/dashboard/groups?' component={DashboardGroupsPage} />
-        <Route path='/dashboard/settings' component={DashboardSettingsPage} />
-        <Route path='/dashboard/exit' component={DashboardLogOffPage} />
-        <Route path='/create/group' component={CreateGroupPage} />
-        <Route path='/create/note' component={CreateNotePage} />
-        <Route path='/group/:id' component={GroupPage} />
-        <Route path='/note/:id' component={NotePage} />
-        <Route path='/edit/:id' component={EditPage} />
-        <Route path='/notifications' component={NotificationsPage} />
-        <Route path='/assessments' component={AssessmentsPage} />
-        <Route path='/search' component={SearchPage} />
-        <Route path='/subjectlist' component={SubjectListPage} />
-        <Route path='/subject/:id' component={SubjectPage} />
-        <Route path='/payroc' component={PayrocPage} />
-        <Route path='' component={SearchPage} />
-        <Route path='/*' component={"index.html"} />
+        <Route path='/#/register' component={RegisterPage} />
+        <Route path='/#/login' component={LogInPage} />
+        <Route path='/#/dashboard/notes' component={DashboardNotesPage}/>
+        <Route path='/#/dashboard/notes?' component={DashboardNotesPage}/>
+        <Route path='/#/dashboard/groups' component={DashboardGroupsPage} />
+        <Route path='/#/dashboard/groups?' component={DashboardGroupsPage} />
+        <Route path='/#/dashboard/settings' component={DashboardSettingsPage} />
+        <Route path='/#/dashboard/exit' component={DashboardLogOffPage} />
+        <Route path='/#/create/group' component={CreateGroupPage} />
+        <Route path='/#/create/note' component={CreateNotePage} />
+        <Route path='/#/group/:id' component={GroupPage} />
+        <Route path='/#/note/:id' component={NotePage} />
+        <Route path='/#/edit/:id' component={EditPage} />
+        <Route path='/#/notifications' component={NotificationsPage} />
+        <Route path='/#/assessments' component={AssessmentsPage} />
+        <Route path='/#/search' component={SearchPage} />
+        <Route path='/#/subjectlist' component={SubjectListPage} />
+        <Route path='/#/subject/:id' component={SubjectPage} />
+        <Route path='/#/payroc' component={PayrocPage} />
+        <Route component={SearchPage} />
       </Switch>
     </div>
   </Router>
