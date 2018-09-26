@@ -430,7 +430,7 @@ class Note extends Component {
           <hr />
             {this.state.attachments.map(file =>
               <span key={file} style={{display: 'inline-block', marginRight: '5px', marginTop: '5px'}}>
-                <a target="_blank" rel="noopener noreferrer" href={`http://localhost:5948/note/${this.props.id}/${file}`}>
+                <a target="_blank" rel="noopener noreferrer" href={`https://studytank.com:6984/note/${this.props.id}/${file}`}>
               <Button
                 variant="contained" color="default"
                 className='darklink'

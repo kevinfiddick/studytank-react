@@ -64,7 +64,7 @@ export default class SearchUserModal extends React.Component {
 
   componentDidMount(){
     let that = this;
-    ax.get('/note/_design/search/_view/search?key="'+  encodeURIComponent(this.props.id) +'"')
+    ax.get('/note/_design/search/_view/search?key="'+ this.props.id +'"')
     .then((result) => {
       var notes = [];
       for(var i = 0; i < result.data.rows.length; i++){
@@ -85,7 +85,7 @@ export default class SearchUserModal extends React.Component {
         notes.push(note);
       }
 
-      ax.get('/group/_design/search/_view/search?key="'+ encodeURIComponent(this.props.id) +'"')
+      ax.get('/group/_design/search/_view/search?key="'+ this.props.id +'"')
       .then((res) => {
         for(var i = 0; i < res.data.rows.length; i++){
           var row = res.data.rows[i];
