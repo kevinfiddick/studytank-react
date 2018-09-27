@@ -198,7 +198,7 @@ class Note extends Component {
           replies: []
         }
         stateComments.push(comment);
-        if(comments[i].commentator != this.state.email && !allCommentators.includes(comments[i].commentator){
+        if(comments[i].commentator != this.state.email && !allCommentators.includes(comments[i].commentator)){
           allCommentators.push(comments[i].commentator);
         }
       }
