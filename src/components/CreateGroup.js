@@ -23,6 +23,7 @@ export default class CreateGroupForm extends React.Component {
     constructor() {
         super();
         this.state = {
+          id: '',
           title: '',
           subject: '',
           school: ''
@@ -41,7 +42,7 @@ export default class CreateGroupForm extends React.Component {
         const group = this.state;
         ax({
           method: 'put',
-          url: '/group/'+Date.now(),
+          url: '/group/'+group.id,
           data: {
             title: group.title,
             subject: group.subject,
@@ -52,13 +53,19 @@ export default class CreateGroupForm extends React.Component {
                 firstname: localStorage.getItem('firstname'),
                 lastname: localStorage.getItem('lastname')
               }
-            ]
+            ],
+            followers: [],
+            invited: []
           }
         }).then((result) => {
-
+            window.location.replace("/group/"+this.state.id);
         }).catch(function (error) {
 
         });
+    }
+
+    componentDidMount(){
+      this.setState({ id: Date.now() });
     }
 
     render() {

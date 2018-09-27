@@ -155,6 +155,7 @@ export default class Comment extends React.Component {
   }
 
   publishReply = () => {
+    if(this.state.replyInput != ''){
       var comment = {
         id: Date.now(),
         commentator: this.state.email,
@@ -263,6 +264,7 @@ export default class Comment extends React.Component {
          });
        }
      }
+   }
   }
 
   componentWillMount(){
@@ -387,7 +389,7 @@ export default class Comment extends React.Component {
       </Grid>)}
     </div>}
       {this.state.reply && <div><TextField
-        value={this.state.commentInput}
+        value={this.state.replyInput}
         onChange={e => {
           this.setState({replyInput: e.target.value});
         }

@@ -146,7 +146,7 @@ export default class Note extends React.Component {
             if(files.length > 0){
               attach(files[i]);
             }else{
-              window.location.replace("/note/"+note.id);
+              window.location.replace("/note/"+this.props.id);
             }
           });
         });
@@ -185,7 +185,7 @@ export default class Note extends React.Component {
                 attach(files[i]);
               }
               else{
-                window.location.replace("/note/"+note._id);
+                window.location.replace("/note/"+this.props.id);
               }
 
           }).catch(err => {
@@ -198,6 +198,7 @@ export default class Note extends React.Component {
   }
 
   upload(e){
+    let that = this;
     this.setState({uploadStatus: <span>Uploading... <CircularProgress /></span>});
     if(this.props.id){
       ax.get('/' + 'note' + '/' + this.props.id).then(result => {
@@ -215,17 +216,17 @@ export default class Note extends React.Component {
            data: {
              _id: note._id,
              _rev: note._rev,
-             title: note.title,
-             content: note.content,
-             author: note.author,
-             authorFirstname: note.authorFirstname,
-             authorLastname: note.authorLastname,
-             subject: note.subject,
-             school: note.school,
-             date: note.date,
-             isFact: note.isFact,
-             language: note.language,
-             textbook: note.textbook,
+             title: that.state.title,
+             content: that.state.content,
+             author: that.state.author,
+             authorFirstname: that.state.authorFirstname,
+             authorLastname: that.state.authorLastname,
+             subject: that.state.subject,
+             school: that.state.school,
+             date: that.state.date,
+             isFact: that.state.isFact,
+             language: that.state.language,
+             textbook: that.state.textbook,
              saved: note.saved,
              folder: note.folder,
              comments: note.comments,
@@ -236,7 +237,7 @@ export default class Note extends React.Component {
           if((this.state.files.length > 0) || (this.state.deleted.length > 0)){
             this.addAttachments();
           }else{
-            window.location.replace("/note/"+note.id);
+            window.location.replace("/note/"+this.props.id);
           }
         });
       });
@@ -267,7 +268,7 @@ export default class Note extends React.Component {
           if((this.state.files.length > 0) || (this.state.deleted.length > 0)){
             this.addAttachments();
           }else{
-            window.location.replace("/note/"+note.id);
+            window.location.replace("/note/"+this.props.id);
           }
       });
     }
@@ -299,10 +300,10 @@ export default class Note extends React.Component {
     this.setState({  date: today });
 
     if(this.props.id){
-      this.setState({ id: this.props.id });
       let that = this;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
           var note = result.data;
+        if(this.state.email == note.author){
           that.setState({ title: note.title });
           that.setState({ subject: note.subject });
           that.setState({ content: note.content });
@@ -311,12 +312,14 @@ export default class Note extends React.Component {
           that.setState({ language: note.language });
           that.setState({ textbook: note.textbook });
           that.setState({ edit: true });
+          that.setState({ id: this.props.id });
           if(note._attachments){
             var attachments = Object.keys(note._attachments);
             if(attachments.length > 0){
               that.setState({ attachments: attachments });
             }
           }
+        }
         }).then(res => {
         });
     }

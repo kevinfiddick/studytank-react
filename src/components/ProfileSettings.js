@@ -7,7 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import {Container, Row, Col} from "reactstrap";
+import {Container, Row, Col, Alert} from "reactstrap";
 import ax from './api';
 import { sha256 } from './Encoder';
 
@@ -30,7 +30,8 @@ export default class CreateGroupForm extends React.Component {
           newPassword: '',
           confirmPassword: '',
           updateSchoolStatus: 'Update',
-          updatePasswordStatus: 'Update'
+          updatePasswordStatus: 'Update',
+          errorStatus: ''
         };
     }
     onChange = (e) => {
@@ -107,16 +108,19 @@ export default class CreateGroupForm extends React.Component {
                   }).then((postResult) => {
                     this.setState({updatePasswordStatus: 'Updated' });
                     localStorage.setItem('password', newPassword);
-                    alert("Your Password Has Been Successfully Updated");
+                    this.setState({errorStatus: ""});
                   });
                 })
+              }else{
+                this.setState({updatePasswordStatus: 'Update' });
+                this.setState({errorStatus: "The password you entered was incorrect"});
               }
             });
 
           }
         );
       }else{
-        alert("Your passwords do not match");
+        this.setState({errorStatus: "Your passwords do not match"});
       }
     }
 
@@ -188,6 +192,12 @@ export default class CreateGroupForm extends React.Component {
                     <Typography variant='subheading'>
                       Update Your Password
                     </Typography>
+
+                    {this.state.errorStatus != '' &&
+                      <Alert color="danger">
+                        {this.state.errorStatus.split('\n').map((item, i) => <div key={i}>{item}</div>)}
+                      </Alert>
+                    }
         				<Row>
                     <Grid container spacing={8} alignItems="flex-end">
                       <Grid item xs={1}>

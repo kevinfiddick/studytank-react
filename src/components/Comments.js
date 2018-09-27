@@ -67,7 +67,8 @@ class Note extends Component {
     comments: [],
     commentInput: '',
     now: '',
-    success: false
+    success: false,
+    author: ''
   };
 
   leaveComment(e){
@@ -81,6 +82,7 @@ class Note extends Component {
   }
 
   publishComment = (type) => {
+    if(this.state.commentInput != ''){
       var comment = {
         id: Date.now(),
         commentator: this.state.email,
@@ -106,6 +108,7 @@ class Note extends Component {
         note.comments.push(comment);
         that.setComments(note.comments);
         that.setState({ commentInput: '' });
+        that.setState({ author: note.author });
         ax({
            method: 'post',
            url: '/note',
@@ -174,11 +177,13 @@ class Note extends Component {
          });
        }
      }
+   }
   }
 
   setComments = (comments) => {
     var stateComments = [];
     var allCommentators = [];
+    allCommentators.push(this.state.author);
     for(var i = 0; i < comments.length; i++){
       var likes = comments[i].likes.length;
       likes == undefined ? likes = 0: null;
@@ -193,7 +198,9 @@ class Note extends Component {
           replies: []
         }
         stateComments.push(comment);
-        comments[i].commentator != this.state.email ? allCommentators.push(comments[i].commentator) : null;
+        if(comments[i].commentator != this.state.email && !allCommentators.includes(comments[i].commentator){
+          allCommentators.push(comments[i].commentator);
+        }
       }
       else{
         var reply = {
