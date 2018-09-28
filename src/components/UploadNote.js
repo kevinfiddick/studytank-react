@@ -46,7 +46,7 @@ const theme = createMuiTheme({
 
 export default class Note extends React.Component {
   state = {
-    id: Date.now(),
+    id: '',
     email: '',
     author: '',
     authorFirstname: '',
@@ -268,7 +268,7 @@ export default class Note extends React.Component {
           if((this.state.files.length > 0) || (this.state.deleted.length > 0)){
             this.addAttachments();
           }else{
-            window.location.replace("/note/"+this.props.id);
+            window.location.replace("/note/"+this.state.id);
           }
       });
     }
@@ -278,6 +278,8 @@ export default class Note extends React.Component {
     const email = localStorage.getItem('email');
     this.setState({ email: email });
     this.setState({ author: email });
+    var now = Date.now();
+    this.setState({ id: now });
     const firstname = localStorage.getItem('firstname');
     const lastname = localStorage.getItem('lastname');
     const school = localStorage.getItem('school');
