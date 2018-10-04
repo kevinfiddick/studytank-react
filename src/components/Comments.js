@@ -250,6 +250,7 @@ class Note extends Component {
     ax.get('/' + 'note' + '/' + this.props.id )
     .then(res => {
       var note = res.data;
+      this.setState({ author: note.author });
       that.setComments(note.comments);
     });
   }
