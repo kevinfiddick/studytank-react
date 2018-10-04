@@ -237,7 +237,7 @@ export default class Note extends React.Component {
           if((this.state.files.length > 0) || (this.state.deleted.length > 0)){
             this.addAttachments();
           }else{
-            window.location.replace("/note/"+this.props.id);
+            window.location.replace("/note/"+that.props.id);
           }
         });
       });

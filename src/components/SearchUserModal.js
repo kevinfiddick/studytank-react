@@ -188,7 +188,7 @@ export default class SearchUserModal extends React.Component {
                 .then(res => {
                   var group = res.data;
                   that.setState({title: group.title});
-                  !group.invited ? group.invited = invite : group.invited.concat(invite);
+                  !group.invited ? group.invited = invite : group.invited = group.invited.concat(invite);
                   ax({
                     method: 'post',
                     url: '/group',
