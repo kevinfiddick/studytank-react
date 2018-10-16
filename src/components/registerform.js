@@ -77,7 +77,7 @@ export default class RegisterForm extends React.Component {
               localStorage.setItem('expires', Date.now() + grace);
               window.location.replace("/dashboard/notes");
             }).catch(function (error) {
-              if(error.response.status == 409){
+              if(error.status == 409){
                 that.setState({ errorStatus: "A user is already registered under " + user.email});
                 window.location.replace("/login");
               } else{

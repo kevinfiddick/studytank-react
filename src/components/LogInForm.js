@@ -64,7 +64,7 @@ export default class LogInForm extends React.Component {
 
             })
             .catch(function (error) {
-              if(error.response.status == 404){
+              if(error.status == 404){
                 var errorStatus = "No users are registered under \n" + that.state.email +
                   "\n Please try another email or Register for free";
                 that.setState({ errorStatus: errorStatus });
