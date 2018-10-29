@@ -49,7 +49,6 @@ export default class ResetForm extends React.Component {
           }
           alert(that.state.code);
 
-                /*
                 var server 	= email.server.connect({
                   user:    "kevinfiddick",
                   password:"egoFriendly123",
@@ -64,7 +63,6 @@ export default class ResetForm extends React.Component {
                   to:      " <"+this.state.email+">",
                   subject: "Password Reset"
                 }, function(err, message) { console.log(err || message); });
-                */
 
 
           that.setState({ sent: true });

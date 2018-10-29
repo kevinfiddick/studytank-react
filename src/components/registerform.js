@@ -59,7 +59,6 @@ export default class RegisterForm extends React.Component {
         this.setState({ confirmation: text });
       }
 
-      /*
       var server 	= email.server.connect({
         user:    "kevinfiddick",
         password:"egoFriendly123",
@@ -74,7 +73,6 @@ export default class RegisterForm extends React.Component {
         to:      this.state.firstname + " <"+this.state.email+">",
         subject: "StudyTank Email Confirmation"
       }, function(err, message) { console.log(err || message); });
-      */
 
       return text;
     }
@@ -222,12 +220,10 @@ export default class RegisterForm extends React.Component {
       var grace = 3 * MONTH_IN_MS;
       var email = '';
       var password = '';
-      console.log(this.props.id);
       if(this.props.id != '' && this.props.id != null){
         let that = this;
       ax.get('/' + 'course' + '/' + '_design/invited/_view/id?key="'+this.props.id+'"')
         .then(res => {
-          console.log(res);
           if(res.data.rows.length > 0 ){
             that.setState({invited: res.data.rows.map(a => a.value)});
             var course = res.data.rows[0].value;

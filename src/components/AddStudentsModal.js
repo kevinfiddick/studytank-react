@@ -200,7 +200,7 @@ export default class AddStudentsModal extends React.Component {
                         if(emails[i] != '' && emails[i] != null){
                           const unique = sha256("email:"+emails[i]);
                           unique.then(function(value){
-                            /*
+                            
                             var server 	= email.server.connect({
                               user:    "kevinfiddick",
                               password:"egoFriendly123",
@@ -217,7 +217,7 @@ export default class AddStudentsModal extends React.Component {
                               to:      " <"+emails[i]+">",
                               subject: "You have been enrolled in " + course.title + " on StudyTank.com"
                             }, function(err, message) { console.log(err || message); });
-                            */
+                            
 
                             var test = course.invited.map(a => a.email);
                             !test.includes(emails[i]) ? course.invited.push({id: value, email: emails[i]}) : null;
