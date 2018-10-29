@@ -18,11 +18,11 @@ class Comment extends Component {
 
   componentWillMount(){
     var liked = this.props.liked;
-    liked ? this.setState({ liked: liked }): null;
+    if(liked) this.setState({ liked: liked });
     var name = this.props.name;
-    name ? this.setState({ name: name }): null;
+    if(name) this.setState({ name: name });
     var color = this.props.color;
-    color ? this.setState({ color: color }): null;
+    if(color) this.setState({ color: color });
   }
 
   return (

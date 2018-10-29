@@ -340,7 +340,7 @@ export default class FilterNoteList extends React.Component {
 							}
 							note.rating = newrating;
 						}
-						note.exclusive == undefined ? note.exclusive = false : null;
+						if(note.exclusive == undefined) note.exclusive = false;
 						ax({
 							method: 'post',
 							url: '/note',
@@ -389,7 +389,7 @@ export default class FilterNoteList extends React.Component {
 	 			 var itemID = itemIDs[i];
 	 			 ax.get('/' + 'note' + '/' + itemID).then(result => {
 					 var note = result.data;
-					 note.folder == undefined ? note.folder = {} : null;
+					 if(note.folder == undefined) note.folder = {};
 					 note.folder[this.props.id] = folderName;
 					 //Converts note ratings to JSON
 					 if(Object.prototype.toString.call(note.rating) === "[object Array]"){
@@ -399,8 +399,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-					 note.exclusive == undefined ? note.exclusive = false : null;
-					 note.courses == undefined ? note.courses = {} : null;
+					 if(note.exclusive == undefined) note.exclusive = false;
+					 if(note.courses == undefined) note.courses = {};
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -450,7 +450,7 @@ export default class FilterNoteList extends React.Component {
 	 			 var itemID = itemIDs[i];
 	 			 ax.get('/' + 'note' + '/' + itemID).then(result => {
 					 var note = result.data;
-					 note.folder == undefined ? note.folder = {} : null;
+					 if(note.folder == undefined) note.folder = {};
 					 note.folder[this.props.id] = folderName;
 					 //Converts note ratings to JSON
 					 if(Object.prototype.toString.call(note.rating) === "[object Array]"){
@@ -460,8 +460,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-					 note.exclusive == undefined ? note.exclusive = false : null;
-					 note.courses == undefined ? note.courses = {} : null;
+					 if(note.exclusive == undefined) note.exclusive = false;
+					 if(note.courses == undefined) note.courses = {};
 						 ax({
  							method: 'post',
  							url: '/note',

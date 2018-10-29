@@ -123,8 +123,8 @@ export default class Note extends React.Component {
             delete note._attachments[deleteID];
           }
 
-          note.exclusive == undefined ? note.exclusive = false : null;
-          note.courses == undefined ? note.courses = {} : null;
+          if(note.exclusive == undefined) note.exclusive = false;
+          if(note.courses == undefined) note.courses = {};
           ax({
              method: 'post',
              url: '/note',

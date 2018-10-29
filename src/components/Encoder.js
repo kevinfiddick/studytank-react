@@ -30,7 +30,8 @@
             "use strict"; // add a little speed, maybe?
             var Len = str.length, resPos = -1, resArr = new Uint8Array(Len * 3);
             for (var point=0, nextcode=0, i = 0; i !== Len; ) {
-                point = str.charCodeAt(i), i += 1;
+                point = str.charCodeAt(i);
+                i++;
                 if (point >= 0xD800 && point <= 0xDBFF) {
                     if (i === Len) {
                         resArr[resPos += 1] = 0xef/*0b11101111*/; resArr[resPos += 1] = 0xbf/*0b10111111*/;

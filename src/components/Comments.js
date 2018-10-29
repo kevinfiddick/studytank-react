@@ -110,8 +110,8 @@ class Note extends Component {
         that.setState({ commentInput: '' });
         that.setState({ author: note.author });
 
-        note.exclusive == undefined ? note.exclusive = false : null;
-        note.courses == undefined ? note.courses = {} : null;
+        if(note.exclusive == undefined) note.exclusive = false;
+        if(note.courses == undefined) note.courses = {};
         ax({
            method: 'post',
            url: '/note',
@@ -191,7 +191,7 @@ class Note extends Component {
     allCommentators.push(this.state.author);
     for(var i = 0; i < comments.length; i++){
       var likes = comments[i].likes.length;
-      likes == undefined ? likes = 0: null;
+      if(likes == undefined) likes = 0;
       if(comments[i].replyTo == 0){
         var comment = {
           id: comments[i].id,
@@ -222,9 +222,8 @@ class Note extends Component {
         initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
         reply.initials = initials;
         for(var j = 0; j < stateComments.length; j++){
-          reply.replyTo == stateComments[j].id ?
-          stateComments[j].replies.push(reply) :
-          null;
+          if(reply.replyTo == stateComments[j].id)
+          stateComments[j].replies.push(reply);
         }
       }
     }

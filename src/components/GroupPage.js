@@ -150,7 +150,7 @@ export default class FilterNoteList extends React.Component {
               initials: initials
             };
             members.push(memberData);
-            member.email == email ? that.setState({member: true}) : null;
+            if(member.email == email) that.setState({member: true});
           }
           that.setState({members: members});
       });
@@ -280,7 +280,7 @@ export default class FilterNoteList extends React.Component {
                   else{
                     group.followers.push(that.state.email);
                   }
-                  !group.invited ? group.invited = [] : null;
+                  if(!group.invited) group.invited = [];
                   ax({
                     method: 'post',
                     url: '/group',

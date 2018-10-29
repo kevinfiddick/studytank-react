@@ -43,14 +43,14 @@ export default class FilterSubjectList extends React.Component {
 						const notes = res.data.rows;
 						for(var i = 0; i < notes.length; i++){
 							var subject = notes[i].key.toLowerCase();
-							!subjects.includes(subject) ? subjects.push(subject) : null;
+							if(!subjects.includes(subject)) subjects.push(subject);
 						}
 						ax.get('/' + 'group' + '/_design/search/_view/search')
 							.then(results => {
 									const groups = results.data.rows;
 									for(var i = 0; i < groups.length; i++){
 										var subject = groups[i].key.toLowerCase();
-										!subjects.includes(subject) ? subjects.push(subject) : null;
+										if(!subjects.includes(subject)) subjects.push(subject);
 									}
 
 									subjects.sort();

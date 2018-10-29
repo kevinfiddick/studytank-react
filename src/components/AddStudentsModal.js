@@ -8,11 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import './FilterList.css';
 import Typography from '@material-ui/core/Typography';
-import Fuse from 'fuse.js';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import { sha256 } from './Encoder';
 import email from 'emailjs';
@@ -197,10 +192,10 @@ export default class AddStudentsModal extends React.Component {
                         });
                       })
                       .catch(er => {
-                        if(emails[i] != '' && emails[i] != null){
+                        if(emails[i] !== '' && emails[i] != null){
                           const unique = sha256("email:"+emails[i]);
                           unique.then(function(value){
-                            
+
                             var server 	= email.server.connect({
                               user:    "kevinfiddick",
                               password:"egoFriendly123",
@@ -217,10 +212,12 @@ export default class AddStudentsModal extends React.Component {
                               to:      " <"+emails[i]+">",
                               subject: "You have been enrolled in " + course.title + " on StudyTank.com"
                             }, function(err, message) { console.log(err || message); });
-                            
+
 
                             var test = course.invited.map(a => a.email);
-                            !test.includes(emails[i]) ? course.invited.push({id: value, email: emails[i]}) : null;
+                            if(!test.includes(emails[i])){
+                              course.invited.push({id: value, email: emails[i]});
+                            }
                             i++;
                             recursiveNotify();
                           });

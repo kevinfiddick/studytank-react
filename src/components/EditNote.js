@@ -61,7 +61,7 @@ class Note extends Component {
       var group = this.state.shareGroupSelect;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
           var note = result.data.value;
-          note.folder == undefined ? note.folder = {} : null;
+          if(note.folder == undefined) note.folder = {};
           note.folder[group] = group;
           if(!note.saved.includes(group)){
             note.saved.push(group);
@@ -75,8 +75,8 @@ class Note extends Component {
             note.rating = newrating;
           }
 
-          note.exclusive == undefined ? note.exclusive = false : null;
-          note.courses == undefined ? note.courses = {} : null;
+          if(note.exclusive == undefined) note.exclusive = false;
+          if(note.courses == undefined) note.courses = {};
           ax({
              method: 'post',
              url: '/note',
@@ -125,8 +125,8 @@ class Note extends Component {
       }
       note.rating[this.state.email] = r;
 
-      note.exclusive == undefined ? note.exclusive = false : null;
-      note.courses == undefined ? note.courses = {} : null;
+      if(note.exclusive == undefined) note.exclusive = false;
+      if(note.courses == undefined) note.courses = {};
       ax({
          method: 'post',
          url: '/note',
@@ -266,8 +266,8 @@ class Note extends Component {
                             note.rating = newrating;
                           }
 
-              						note.exclusive == undefined ? note.exclusive = false : null;
-              						note.courses == undefined ? note.courses = {} : null;
+              						if(note.exclusive == undefined) note.exclusive = false;
+              						if(note.courses == undefined) note.courses = {};
               						ax({
               							method: 'post',
               							url: '/note',

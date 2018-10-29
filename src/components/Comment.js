@@ -73,8 +73,8 @@ export default class Comment extends React.Component {
           }
         }
 
-        note.exclusive == undefined ? note.exclusive = false : null;
-        note.courses == undefined ? note.courses = {} : null;
+        if(note.exclusive == undefined) note.exclusive = false;
+        if(note.courses == undefined) note.courses = {};
         ax({
            method: 'post',
            url: '/note',
@@ -129,8 +129,8 @@ export default class Comment extends React.Component {
           }
         }
 
-        note.exclusive == undefined ? note.exclusive = false : null;
-        note.courses == undefined ? note.courses = {} : null;
+        if(note.exclusive == undefined) note.exclusive = false;
+        if(note.courses == undefined) note.courses = {};
         ax({
            method: 'post',
            url: '/note',
@@ -204,8 +204,8 @@ export default class Comment extends React.Component {
         that.setState({ replies: replies });
         that.setState({ replyInput: '' });
 
-        note.exclusive == undefined ? note.exclusive = false : null;
-        note.courses == undefined ? note.courses = {} : null;
+        if(note.exclusive == undefined) note.exclusive = false;
+        if(note.courses == undefined) note.courses = {};
         ax({
            method: 'post',
            url: '/note',
@@ -298,16 +298,16 @@ export default class Comment extends React.Component {
     var liked = this.props.liked;
     liked ? this.setState({ liked: liked }): this.setState({ liked: liked });
     var likes = this.props.likes;
-    likes ? this.setState({ likes: likes }): null;
+    if(likes) this.setState({ likes: likes });
     var name = this.props.name;
     this.setState({ name: name });
     var badge = this.props.badge;
-    badge ? this.setState({ badge: badge }): null;
+    if(badge) this.setState({ badge: badge });
     var replies = this.props.replies;
-    replies ? this.setState({ replies: replies }): null;
+    if(replies) this.setState({ replies: replies });
     var allCommentators = [];
     for(var i = 0; i < replies.length; i++){
-      replies[i].commentator != this.state.email ? allCommentators.push(replies[i].commentator) : null;
+      if(replies[i].commentator != this.state.email) allCommentators.push(replies[i].commentator);
     }
     this.setState({ commentators: allCommentators });
 

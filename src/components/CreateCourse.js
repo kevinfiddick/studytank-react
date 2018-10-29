@@ -167,9 +167,9 @@ export default class CreateCourseForm extends React.Component {
                        to:      " <"+emails[i]+">",
                        subject: "You have been enrolled in " + course.title + " on StudyTank.com"
                      }, function(err, message) { console.log(err || message); });
-                     
+
                    var test = course.invited.map(a => a.email);
-                   !test.includes(emails[i]) ? course.invited.push({id: value, email: emails[i]}) : null;
+                   if(!test.includes(emails[i])) course.invited.push({id: value, email: emails[i]});
                    i++;
                    recursiveNotify();
                  });

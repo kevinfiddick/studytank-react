@@ -133,7 +133,7 @@ export default class CoursePage extends React.Component {
               initials: initials
             };
             students.push(studentData);
-            student.email == email ? that.setState({student: true}) : null;
+            if(student.email == email) that.setState({student: true});
           }
           that.setState({students: students});
 
@@ -149,7 +149,7 @@ export default class CoursePage extends React.Component {
               initials: initials
             };
             admins.push(adminData);
-            admin.email == email ? that.setState({admin: true}) : null;
+            if(admin.email == email) that.setState({admin: true});
           }
           that.setState({admins: admins});
       });

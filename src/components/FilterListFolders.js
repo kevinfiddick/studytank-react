@@ -94,8 +94,8 @@ export default class FilterNoteList extends React.Component {
 						note.saved.splice(index, 1);
 
 
-						note.exclusive == undefined ? note.exclusive = false : null;
-						note.courses == undefined ? note.courses = {} : null;
+						if(note.exclusive == undefined) note.exclusive = false;
+						if(note.courses == undefined) note.courses = {};
 						ax({
 							method: 'post',
 							url: '/note',
@@ -152,8 +152,8 @@ export default class FilterNoteList extends React.Component {
 	 						var index = note.saved.indexOf(this.state.username);
 	 						note.saved.splice(index, 1);
 
-							note.exclusive == undefined ? note.exclusive = false : null;
-							note.courses == undefined ? note.courses = {} : null;
+							if(note.exclusive == undefined) note.exclusive = false;
+							if(note.courses == undefined) note.courses = {};
 	 						ax({
 	 							method: 'post',
 	 							url: '/note',

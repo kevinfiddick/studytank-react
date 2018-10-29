@@ -136,8 +136,8 @@ export default class CoursesAndOutcomes extends Component {
           ax.get('/' + 'note' + '/' + this.props.id )
           .then(res => {
             var note = res.data;
-            note.exclusive == undefined ? note.exclusive = false : null;
-            note.courses == undefined ? note.courses = {} : null;
+            if(note.exclusive == undefined) note.exclusive = false;
+            if(note.courses == undefined) note.courses = {};
             var author = note.author == email;
             that.setState({ author: author });
             that.setState({ exclusive: note.exclusive});
