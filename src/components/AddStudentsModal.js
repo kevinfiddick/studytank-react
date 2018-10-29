@@ -10,7 +10,7 @@ import './FilterList.css';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { sha256 } from './Encoder';
-import email from 'emailjs';
+import emailjs from 'emailjs-com';
 
 export default class AddStudentsModal extends React.Component {
   constructor(props) {
@@ -22,7 +22,8 @@ export default class AddStudentsModal extends React.Component {
       modal: false,
       selected: [],
       students: [],
-      users: []
+      users: [],
+      course: ''
     };
 
     this.toggle = this.toggle.bind(this);
@@ -44,6 +45,8 @@ export default class AddStudentsModal extends React.Component {
   componentDidMount(){
     var email = localStorage.getItem('email');
     this.setState({email: email});
+
+    emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
 
     let that = this;
     if(localStorage.getItem('firstname') == '' || localStorage.getItem('firstname') == null ){
@@ -146,6 +149,7 @@ export default class AddStudentsModal extends React.Component {
                   var course = res.data;
                   that.setState({title: course.title});
                   that.setState({professor: course.professor});
+                  that.setState({course: course.course});
                   !course.students ? course.students = students : course.students = course.students.concat(students);
                   !course.invited ? course.invited = invited : course.invited = course.invited.concat(invited);
                		 var i = 0;
@@ -196,22 +200,17 @@ export default class AddStudentsModal extends React.Component {
                           const unique = sha256("email:"+emails[i]);
                           unique.then(function(value){
 
-                            var server 	= email.server.connect({
-                              user:    "kevinfiddick",
-                              password:"egoFriendly123",
-                              host:    "smtp.zoho.com",
-                              ssl:     true
-                            });
+                            var template_params = {
+                              "email": emails[i],
+                              "professor": that.state.professor,
+                              "title": that.state.title,
+                              "course": that.state.course,
+                              "url": "https://www.studytank.com/quickreg/" + value
+                            }
 
-                            // send the message and get a callback with an error or details of the message that was sent
-                            server.send({
-                              text:    "View Class Material, Filter Notes by Course Outcomes, and Share Your Notes with Classmates today!\n\n" +
-                              "We already filled out most of the registration for you! \n"+
-                              "Finish Registeration Here: https://www.studytank.com/quickreg/" + value ,
-                              from:    "StudyTank <kevinfiddick@studytank.com>",
-                              to:      " <"+emails[i]+">",
-                              subject: "You have been enrolled in " + course.title + " on StudyTank.com"
-                            }, function(err, message) { console.log(err || message); });
+                            var service_id = "zoho";
+                            var template_id = "register";
+                            emailjs.send(service_id,template_id,template_params);
 
 
                             var test = course.invited.map(a => a.email);

@@ -10,7 +10,7 @@ import {Link} from 'react-router-dom';
 import {withRouter} from "react-router-dom";
 import {Router} from "react-router";
 import { sha256 } from './Encoder';
-import email from 'emailjs';
+import emailjs from 'emailjs-com';
 
 export default class ResetForm extends React.Component {
 
@@ -47,23 +47,15 @@ export default class ResetForm extends React.Component {
 
             that.setState({ code: text });
           }
-          alert(that.state.code);
 
-                var server 	= email.server.connect({
-                  user:    "kevinfiddick",
-                  password:"egoFriendly123",
-                  host:    "smtp.zoho.com",
-                  ssl:     true
-                });
+          var template_params = {
+            "email": that.state.email,
+            "code": that.state.code
+          }
 
-                // send the message and get a callback with an error or details of the message that was sent
-                server.send({
-                  text:    "Reset your password by using this code: \n\n" + this.state.code ,
-                  from:    "StudyTank <kevinfiddick@studytank.com>",
-                  to:      " <"+this.state.email+">",
-                  subject: "Password Reset"
-                }, function(err, message) { console.log(err || message); });
-
+          var service_id = "zoho";
+          var template_id = "password_reset";
+          emailjs.send(service_id,template_id,template_params);
 
           that.setState({ sent: true });
         }else{
@@ -126,6 +118,8 @@ export default class ResetForm extends React.Component {
     }
 
     componentWillMount(){
+
+      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
     }
 
     render() {

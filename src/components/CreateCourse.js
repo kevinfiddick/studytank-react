@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid'
 import {Container, Row, Col} from "reactstrap";
 import ax from './api';
 import { sha256 } from './Encoder';
-import email from 'emailjs';
+import emailjs from 'emailjs-com';
 
 import './Form.css'
 import './FilterList.css'
@@ -151,22 +151,17 @@ export default class CreateCourseForm extends React.Component {
                  const unique = sha256("email:"+emails[i]);
                  unique.then(function(value){
 
-                     var server 	= email.server.connect({
-                       user:    "kevinfiddick",
-                       password:"egoFriendly123",
-                       host:    "smtp.zoho.com",
-                       ssl:     true
-                     });
+                   var template_params = {
+                     "email": emails[i],
+                     "professor": course.professor,
+                     "title": course.title,
+                     "course": course.course,
+                     "url": "https://www.studytank.com/quickreg/" + value
+                   }
 
-                     // send the message and get a callback with an error or details of the message that was sent
-                     server.send({
-                       text:    "View Class Material, Filter Notes by Course Outcomes, and Share Your Notes with Classmates today!\n\n" +
-                       "We already filled out most of the registration for you! \n"+
-                       "Finish Registeration Here: https://www.studytank.com/quickreg/" + value ,
-                       from:    "StudyTank <kevinfiddick@studytank.com>",
-                       to:      " <"+emails[i]+">",
-                       subject: "You have been enrolled in " + course.title + " on StudyTank.com"
-                     }, function(err, message) { console.log(err || message); });
+                   var service_id = "zoho";
+                   var template_id = "register";
+                   emailjs.send(service_id,template_id,template_params);
 
                    var test = course.invited.map(a => a.email);
                    if(!test.includes(emails[i])) course.invited.push({id: value, email: emails[i]});
@@ -207,6 +202,9 @@ export default class CreateCourseForm extends React.Component {
 
     componentDidMount(){
       this.setState({ id: Date.now() });
+
+      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
+      
       this.setState({ email: localStorage.getItem('email')});
         var outcomes = [];
         outcomes = outcomes.concat(this.state.outcomes);

@@ -11,7 +11,7 @@ import TermsAndConditions from './TermsAndConditions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {Alert} from "reactstrap";
-import email from 'emailjs';
+import emailjs from 'emailjs-com';
 
 export default class RegisterForm extends React.Component {
 
@@ -59,20 +59,14 @@ export default class RegisterForm extends React.Component {
         this.setState({ confirmation: text });
       }
 
-      var server 	= email.server.connect({
-        user:    "kevinfiddick",
-        password:"egoFriendly123",
-        host:    "smtp.zoho.com",
-        ssl:     true
-      });
+      var template_params = {
+        "email": this.state.email,
+        "code": this.state.confirmation
+      }
 
-      // send the message and get a callback with an error or details of the message that was sent
-      server.send({
-        text:    "Welcome To StudyTank! \n\n Finish your registration by using this code: \n\n" + this.state.confirmation ,
-        from:    "StudyTank <kevinfiddick@studytank.com>",
-        to:      this.state.firstname + " <"+this.state.email+">",
-        subject: "StudyTank Email Confirmation"
-      }, function(err, message) { console.log(err || message); });
+      var service_id = "zoho";
+      var template_id = "confirmation_email";
+      emailjs.send(service_id,template_id,template_params);
 
       return text;
     }
@@ -214,6 +208,8 @@ export default class RegisterForm extends React.Component {
     }
 
     componentWillMount(){
+
+      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
       //checks if localStorage is expired
       const MONTH_IN_MS = 2678400000;
       var expiration = 0;
@@ -361,9 +357,14 @@ export default class RegisterForm extends React.Component {
 
                   {this.state.confirm &&
                     <div>
-                    {this.state.errorStatus != '' &&
+                    {this.state.errorStatus !== '' &&
                       <Alert color="danger">
                         {this.state.errorStatus.split('\n').map((item, i) => <div key={i}>{item}</div>)}
+                      </Alert>
+                    }
+                    {this.state.errorStatus === '' &&
+                      <Alert color="warning">
+                        Do not leave this page, your progress will not be saved
                       </Alert>
                     }
                     <Typography variant='headline' component='h1'>
