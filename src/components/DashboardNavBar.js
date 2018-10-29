@@ -36,11 +36,14 @@ export default class SecondaryTabs extends React.Component {
 			case 'groups':
 				this.setState({ value: 1 });
 				break;
-			case 'settings':
+			case 'courses':
 				this.setState({ value: 2 });
 				break;
-			case 'exit':
+			case 'settings':
 				this.setState({ value: 3 });
+				break;
+			case 'exit':
+				this.setState({ value: 4 });
 				break;
 		}
 	}
@@ -71,6 +74,12 @@ export default class SecondaryTabs extends React.Component {
 		              label={<span style={smallFont}>Groups</span>}
 									component={Link}
 									to='/dashboard/groups'
+									className="darklink"
+								/>
+								<Tab
+		              label={<span style={smallFont}>Courses</span>}
+									component={Link}
+									to='/dashboard/courses'
 									className="darklink"
 								/>
 								<Tab

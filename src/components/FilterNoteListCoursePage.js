@@ -60,6 +60,7 @@ export default class FilterNoteList extends React.Component {
 				view: 'all',
 				sort: 'abc',
 				openFolder: '',
+        filter: null
 	};
 
 	/**
@@ -389,8 +390,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-           note.exclusive == undefined ? note.exclusive = false : null;
-           note.courses == undefined ? note.courses = {} : null;
+					 note.exclusive == undefined ? note.exclusive = false : null;
+					 note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -450,8 +451,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-           note.exclusive == undefined ? note.exclusive = false : null;
-           note.courses == undefined ? note.courses = {} : null;
+					 note.exclusive == undefined ? note.exclusive = false : null;
+					 note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -519,19 +520,63 @@ export default class FilterNoteList extends React.Component {
 
 		const email = localStorage.getItem('email');
 		this.setState({email: email});
-		//this code is recursive, only to save space.
-		var iteration = 0;
+    this.setState({ filter: this.props.filter });
+		this.setNotes();
 
-		const setNotes = () => {
-			ax.get('/' + 'note' + '/_design/dashboard/_view/bookmarked?key=\"' + this.props.id + '\"')
-				.then(res => {
-						const viewArray = res.data.rows;
+	}
+  componentWillReceiveProps(nextProps) {
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if (!this.isEqual(nextProps.filter, this.state.filter)) {
+			var filterArray = [];
+			filterArray = filterArray.concat(nextProps.filter);
+      this.setState({ filter: filterArray });
+			this.setNotes();
+    }
+  }
 
-						for(var i = 0; i < viewArray.length; i++){
-							var note = viewArray[i];
+	diff(arr1, arr2){
+		var ret = [];
+		for(var i in arr1) {
+				if(arr2.indexOf(arr1[i]) > -1){
+						ret.push(arr1[i]);
+				}
+		}
+		return ret;
+	}
+
+	isEqual(a, b){
+		if (a === b) return true;
+  	if (a == null || b == null) return false;
+  	if (a.length != b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  	for (var i = 0; i < a.length; ++i) {
+    	if (a[i] !== b[i]) return false;
+  	}
+  	return true;
+	}
+
+	setNotes(){
+		this.setState({ folders: [] });
+
+		this.setState({ items: [] });
+		this.setState({ filteredItems: [] });
+		this.setState({ sortedItems: [] });
+		ax.get('/' + 'note' + '/_design/course/_view/outcomes?key="' + this.props.id + '"')
+			.then(res => {
+					const viewArray = res.data.rows;
+
+					for(var i = 0; i < viewArray.length; i++){
+						var note = viewArray[i];
+
+						if(this.props.filter.length == 0 || this.diff(this.props.filter, note.value.outcomes).length > 0){
+
 							note.value.field = "";
 							//Converts note ratings to JSON
-
 							if(Object.prototype.toString.call(note.value.rating) === "[object Array]"){
 								var newrating = {};
 								for(var j = 0; j < note.value.rating.length; j++){
@@ -558,20 +603,18 @@ export default class FilterNoteList extends React.Component {
 							}
 							viewArray[i] = note;
 						}
+					}
 
-						var itemsArray = this.state.items;
-						itemsArray.push.apply(itemsArray, viewArray);
+					var itemsArray = this.state.items;
+					itemsArray.push.apply(itemsArray, viewArray);
 
-						itemsArray = orderBy(itemsArray, [note => note.value.title.toLowerCase()]);
-						this.setState({ items: itemsArray });
-						this.setState({ filteredItems: itemsArray });
-						this.setState({ sortedItems: itemsArray });
-			});
-		}
-				setNotes();
+					itemsArray = orderBy(itemsArray, [note => note.value.title.toLowerCase()]);
 
+					this.setState({ items: itemsArray });
+					this.setState({ filteredItems: itemsArray });
+					this.setState({ sortedItems: itemsArray });
+		});
 	}
-
 
 	/**
 	 *	RENDER

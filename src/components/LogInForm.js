@@ -147,6 +147,9 @@ export default class LogInForm extends React.Component {
 
                   </form>
                   <Link to='/register'>or Register Here (It's Free!)</Link>
+                  <hr />
+                  <Link to='/passwordreset'>Forgotten Password?</Link>
+
                 </Paper>
               </div>
             );

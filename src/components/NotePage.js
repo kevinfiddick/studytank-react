@@ -26,6 +26,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Comments from './Comments'
+import CoursesAndOutcomes from './CoursesAndOutcomes'
 
 const theme = createMuiTheme({
   palette: {
@@ -75,7 +76,8 @@ class Note extends Component {
     commentInput: '',
     shareGroupSelect: '',
     shareStatus: 'Share',
-    attachments: []
+    attachments: [],
+    permission: true
   };
 
   onShareWithGroup(e){
@@ -97,6 +99,9 @@ class Note extends Component {
             }
             note.rating = newrating;
           }
+
+          note.exclusive == undefined ? note.exclusive = false : null;
+          note.courses == undefined ? note.courses = {} : null;
           ax({
              method: 'post',
              url: '/note',
@@ -118,6 +123,8 @@ class Note extends Component {
                folder: note.folder,
                comments: note.comments,
                rating: note.rating,
+               exclusive: note.exclusive,
+               courses: note.courses,
                _attachments:note._attachments
              }
           }).then(res => {
@@ -142,6 +149,9 @@ class Note extends Component {
         note.rating = newrating;
       }
       note.rating[this.state.email] = r;
+
+      note.exclusive == undefined ? note.exclusive = false : null;
+      note.courses == undefined ? note.courses = {} : null;
       ax({
          method: 'post',
          url: '/note',
@@ -163,12 +173,105 @@ class Note extends Component {
            folder: note.folder,
            comments: note.comments,
            rating: note.rating,
+           exclusive: note.exclusive,
+           courses: note.courses,
            _attachments:note._attachments
          }
       }).then(res => {
       });
     });
   }
+
+  selection(courses){
+    ax.get('/' + 'note' + '/' + this.props.id )
+    .then(res => {
+      var note = res.data;
+      //Converts note ratings to JSON
+      if(Object.prototype.toString.call(note.rating) === "[object Array]"){
+        var newrating = {};
+        for(var j = 0; j < note.rating.length; j++){
+          newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+        }
+        note.rating = newrating;
+      }
+
+      note.exclusive == undefined ? note.exclusive = false : null;
+      note.courses = courses;
+      ax({
+        method: 'post',
+        url: '/note',
+        data: {
+          _id: note._id,
+          _rev: note._rev,
+          title: note.title,
+          content: note.content,
+          author: note.author,
+          authorFirstname: note.authorFirstname,
+          authorLastname: note.authorLastname,
+          subject: note.subject,
+          school: note.school,
+          date: note.date,
+          isFact: note.isFact,
+          language: note.language,
+          textbook: note.textbook,
+          saved: note.saved,
+          folder: note.folder,
+          comments: note.comments,
+          rating: note.rating,
+          exclusive: note.exclusive,
+          courses: note.courses,
+          _attachments: note._attachments
+        }
+      }).then(res => {
+
+      });
+    });
+  }
+    exclusive(bool){
+      ax.get('/' + 'note' + '/' + this.props.id )
+      .then(res => {
+        var note = res.data;
+        //Converts note ratings to JSON
+        if(Object.prototype.toString.call(note.rating) === "[object Array]"){
+          var newrating = {};
+          for(var j = 0; j < note.rating.length; j++){
+            newrating[note.rating[j].uniqueID] = note.rating[j].rating;
+          }
+          note.rating = newrating;
+        }
+
+        note.courses == undefined ? note.courses = {} : null;
+        note.exclusive = bool;
+        ax({
+          method: 'post',
+          url: '/note',
+          data: {
+            _id: note._id,
+            _rev: note._rev,
+            title: note.title,
+            content: note.content,
+            author: note.author,
+            authorFirstname: note.authorFirstname,
+            authorLastname: note.authorLastname,
+            subject: note.subject,
+            school: note.school,
+            date: note.date,
+            isFact: note.isFact,
+            language: note.language,
+            textbook: note.textbook,
+            saved: note.saved,
+            folder: note.folder,
+            comments: note.comments,
+            rating: note.rating,
+            exclusive: note.exclusive,
+            courses: note.courses,
+            _attachments: note._attachments
+          }
+        }).then(res => {
+
+        });
+      });
+    }
 
   componentDidMount(){
     const email = localStorage.getItem('email') || '';
@@ -193,7 +296,6 @@ class Note extends Component {
                 var grace = 3 * MONTH_IN_MS;
                 localStorage.setItem('expires', Date.now() + grace);
 
-                window.location.replace("/dashboard/notes");
               }
               else{
                 localStorage.clear();
@@ -204,11 +306,30 @@ class Note extends Component {
     ax.get('/' + 'note' + '/' + this.props.id )
     .then(res => {
       var note = res.data;
+      note.exclusive == undefined ? note.exclusive = false : null;
+      note.courses == undefined ? note.courses = {} : null;
       var bookmarked = note.saved.includes(email);;
       var rating = '';
       var info = [];
       var numberRating;
       var author = false;
+
+      if(note.exclusive){
+        var permission = Object.keys(note.courses).length === 0 && note.courses.constructor === Object;
+        this.setState({ permission: permission });
+
+
+        ax.get('/' + 'course' + '/_design/members/_view/' + 'all' + '?key="' + email + '"')
+        .then(res => {
+            var rows = res.data.rows;
+            var permission = rows.length > 0 || this.state.permission;
+            this.setState({ permission: permission });
+        });
+      }
+      else{
+        this.setState({ permission: true });
+      }
+
       //Converts note ratings to JSON
       if(Object.prototype.toString.call(note.rating) === "[object Array]"){
         var newrating = {};
@@ -271,6 +392,7 @@ class Note extends Component {
   render() {
     return(
     <div>
+      {this.state.permission &&
       <Container>
         <Col xs={{ size: 12 }}>
           {this.state.email == '' && <div><Alert color='danger'> You Are Not Signed In! Some Content On This Note Page Will Be Disabled </Alert></div>}
@@ -319,6 +441,9 @@ class Note extends Component {
                             }
                             note.rating = newrating;
                           }
+
+              						note.exclusive == undefined ? note.exclusive = false : null;
+              						note.courses == undefined ? note.courses = {} : null;
               						ax({
               							method: 'post',
               							url: '/note',
@@ -340,6 +465,8 @@ class Note extends Component {
                 							folder: note.folder,
                 							comments: note.comments,
               								rating: note.rating,
+              								exclusive: note.exclusive,
+              								courses: note.courses,
                 							_attachments: note._attachments
               							}
               						}).then(res => {
@@ -461,13 +588,29 @@ class Note extends Component {
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
+          <CoursesAndOutcomes id={this.props.id} selection={this.selection.bind(this)} exclusive={this.exclusive.bind(this)}/>
           <hr />
           <Typography variant='display1'>
               Comments
           </Typography>
           <Comments id={this.props.id} title={this.state.title} />
     	  </Col>
-      </Container>
+      </Container>}
+      {!this.state.permission &&
+        <Container>
+          <Row>
+            <Col md={{ size: 8, offset: 2 }} xs={{ size: 12, offset: 0 }}>
+              <br/>
+              <Typography variant="display1" gutterBottom>
+                Access Denied
+              </Typography>
+              <Typography variant="subheading" gutterBottom>
+                You are not enrolled in this course
+              </Typography>
+
+            </Col>
+          </Row>
+        </Container>}
     </div>
     )
   }

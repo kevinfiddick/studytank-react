@@ -73,6 +73,8 @@ export default class Comment extends React.Component {
           }
         }
 
+        note.exclusive == undefined ? note.exclusive = false : null;
+        note.courses == undefined ? note.courses = {} : null;
         ax({
            method: 'post',
            url: '/note',
@@ -94,6 +96,8 @@ export default class Comment extends React.Component {
              folder: note.folder,
              comments: note.comments,
              rating: note.rating,
+             exclusive: note.exclusive,
+             courses: note.courses,
              _attachments:note._attachments
            }
         }).then(res => {
@@ -125,6 +129,8 @@ export default class Comment extends React.Component {
           }
         }
 
+        note.exclusive == undefined ? note.exclusive = false : null;
+        note.courses == undefined ? note.courses = {} : null;
         ax({
            method: 'post',
            url: '/note',
@@ -146,6 +152,8 @@ export default class Comment extends React.Component {
              folder: note.folder,
              comments: note.comments,
              rating: note.rating,
+             exclusive: note.exclusive,
+             courses: note.courses,
              _attachments:note._attachments
            }
         }).then(res => {
@@ -168,7 +176,6 @@ export default class Comment extends React.Component {
         replyTo: this.state.commentID
       }
       let that = this;
-        console.log('fuck');
       ax.get('/' + 'note' + '/' + this.props.id )
       .then(res => {
         var note = res.data;
@@ -196,6 +203,9 @@ export default class Comment extends React.Component {
         replies.push(reply);
         that.setState({ replies: replies });
         that.setState({ replyInput: '' });
+
+        note.exclusive == undefined ? note.exclusive = false : null;
+        note.courses == undefined ? note.courses = {} : null;
         ax({
            method: 'post',
            url: '/note',
@@ -217,6 +227,8 @@ export default class Comment extends React.Component {
              folder: note.folder,
              comments: note.comments,
              rating: note.rating,
+             exclusive: note.exclusive,
+             courses: note.courses,
              _attachments:note._attachments
            }
         }).then(res => {

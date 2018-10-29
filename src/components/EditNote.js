@@ -74,6 +74,9 @@ class Note extends Component {
             }
             note.rating = newrating;
           }
+
+          note.exclusive == undefined ? note.exclusive = false : null;
+          note.courses == undefined ? note.courses = {} : null;
           ax({
              method: 'post',
              url: '/note',
@@ -95,6 +98,8 @@ class Note extends Component {
                folder: note.folder,
                comments: note.comments,
                rating: note.rating,
+               exclusive: note.exclusive,
+               courses: note.courses,
                _attachments:note._attachments
              }
           }).then(res => {
@@ -119,6 +124,9 @@ class Note extends Component {
         note.rating = newrating;
       }
       note.rating[this.state.email] = r;
+
+      note.exclusive == undefined ? note.exclusive = false : null;
+      note.courses == undefined ? note.courses = {} : null;
       ax({
          method: 'post',
          url: '/note',
@@ -140,6 +148,8 @@ class Note extends Component {
            folder: note.folder,
            comments: note.comments,
            rating: note.rating,
+           exclusive: note.exclusive,
+           courses: note.courses,
            _attachments:note._attachments
          }
       }).then(res => {
@@ -255,6 +265,9 @@ class Note extends Component {
                             }
                             note.rating = newrating;
                           }
+
+              						note.exclusive == undefined ? note.exclusive = false : null;
+              						note.courses == undefined ? note.courses = {} : null;
               						ax({
               							method: 'post',
               							url: '/note',
@@ -276,6 +289,8 @@ class Note extends Component {
                 							folder: note.folder,
                 							comments: note.comments,
               								rating: note.rating,
+              								exclusive: note.exclusive,
+              								courses: note.courses,
                 							_attachments: note._attachments
               							}
               						}).then(res => {

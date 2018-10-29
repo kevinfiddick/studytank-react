@@ -7,7 +7,9 @@ import NavBar from './components/NavBar'
 import SecondaryNavBar from './components/SecondaryNavBar'
 import DashboardNavBar from './components/DashboardNavBar'
 import DashboardButton from './components/DashboardButton'
+import NewCourseButton from './components/NewCourseButton'
 import FilterGroupList from './components/FilterGroupList'
+import FilterCourseList from './components/FilterCourseList'
 import FilterNoteList from './components/FilterNoteList'
 import Heading from './components/Heading'
 import Info from './components/Info'
@@ -17,7 +19,10 @@ import LogInForm from './components/LogInForm'
 import LogOff from './components/LogOff'
 import Payroc from './components/Payroc'
 import CreateGroup from './components/CreateGroup'
+import CreateCourse from './components/CreateCourse'
 import Group from './components/GroupPage'
+import Course from './components/CoursePage'
+import ResetPassword from './components/ResetPassword'
 import Search from './components/Search'
 import SearchSubject from './components/SearchSubject'
 import Note from './components/NotePage'
@@ -61,11 +66,27 @@ const RegisterPage = ({ match }) => (
   </div>
 )
 
+const RegisterPageWithID = ({ match }) => (
+  <div>
+    <NavBar pathname='register'/>
+    <SecondaryNavBar subpath='register'/>
+    <RegisterForm id={match.params.id} />
+  </div>
+)
+
 const LogInPage = ({ match }) => (
   <div>
     <NavBar pathname='login'/>
     <SecondaryNavBar subpath='login'/>
     <LogInForm/>
+  </div>
+)
+
+const ResetPage = ({ match }) => (
+  <div>
+    <NavBar pathname='login'/>
+    <SecondaryNavBar subpath='reset'/>
+    <ResetPassword />
   </div>
 )
 
@@ -92,6 +113,20 @@ const DashboardGroupsPage = ({ match }) => (
     <MuiThemeProvider theme={theme}>
     <DashboardButton color='secondary' linkTo='/create/group' label='Create New Group'/>
       <FilterGroupList/>
+    </MuiThemeProvider>
+  </Authentification>
+  </div>
+)
+
+const DashboardCoursesPage = ({ match }) => (
+  <div>
+    <NavBar pathname='dashboard'/>
+    <Authentification>
+    <DashboardNavBar subpath='courses'/>
+    <Heading>Courses</Heading>
+    <MuiThemeProvider theme={theme}>
+      <NewCourseButton color='primary' linkTo='/create/course' label='Create New Course'/>
+      <FilterCourseList/>
     </MuiThemeProvider>
   </Authentification>
   </div>
@@ -136,6 +171,20 @@ const CreateGroupPage = ({ match }) => (
   </div>
 )
 
+const CreateCoursePage = ({ match }) => (
+  <div>
+    <NavBar pathname='dashboard'/>
+  <Authentification>
+    <DashboardNavBar subpath='courses'/>
+    <Heading>Create Course</Heading>
+    <MuiThemeProvider theme={theme}>
+    <DashboardButton color='primary' linkTo='/dashboard/courses' label='Go Back'/>
+    <br/><CreateCourse />
+    </MuiThemeProvider>
+  </Authentification>
+  </div>
+)
+
 const CreateNotePage = ({ match }) => (
   <div>
     <NavBar pathname='dashboard'/>
@@ -156,10 +205,29 @@ const EditPage = ({ match }) => (
   </div>
 )
 
+const AddCourseContentPage = ({ match }) => (
+  <div>
+    <NavBar pathname='dashboard'/>
+  <Authentification>
+    <DashboardNavBar subpath='notes'/>
+    <CreateNote course={match.params.id}/>
+  </Authentification>
+  </div>
+)
+
 const GroupPage = ({ match }) => (
     <div>
       <NavBar pathname='group'/>
       <br/><Group id={match.params.id}/>
+    </div>
+)
+
+const CoursePage = ({ match }) => (
+    <div>
+      <NavBar pathname='course'/>
+    <Authentification>
+      <br/><Course id={match.params.id}/>
+    </Authentification>
     </div>
 )
 
@@ -220,18 +288,25 @@ const App = () => (
     <div>
       <Switch>
         <Route path='/register' component={RegisterPage} />
+        <Route path='/quickreg/:id' component={RegisterPageWithID} />
         <Route path='/login' component={LogInPage} />
+        <Route path='/resetpassword' component={ResetPage} />
+        <Route path='/passwordreset' component={ResetPage} />
         <Route path='/dashboard/notes' component={DashboardNotesPage}/>
         <Route path='/dashboard/notes?' component={DashboardNotesPage}/>
         <Route path='/dashboard/groups' component={DashboardGroupsPage} />
         <Route path='/dashboard/groups?' component={DashboardGroupsPage} />
+        <Route path='/dashboard/courses' component={DashboardCoursesPage} />
         <Route path='/dashboard/settings' component={DashboardSettingsPage} />
         <Route path='/dashboard/exit' component={DashboardLogOffPage} />
         <Route path='/create/group' component={CreateGroupPage} />
         <Route path='/create/note' component={CreateNotePage} />
+        <Route path='/create/course' component={CreateCoursePage} />
+        <Route path='/course/:id' component={CoursePage} />
         <Route path='/group/:id' component={GroupPage} />
         <Route path='/note/:id' component={NotePage} />
         <Route path='/edit/:id' component={EditPage} />
+        <Route path='/newcontent/:id' component={AddCourseContentPage} />
         <Route path='/notifications' component={NotificationsPage} />
         <Route path='/assessments' component={AssessmentsPage} />
         <Route path='/search' component={SearchPage} />

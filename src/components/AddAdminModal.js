@@ -15,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 
-export default class SearchUserModal extends React.Component {
+export default class AddAdminModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ export default class SearchUserModal extends React.Component {
       email: '',
       modal: false,
       search: '',
-      members: [],
+      admins: [],
       users: [],
       suggested: [],
       selected: []
@@ -91,15 +91,15 @@ export default class SearchUserModal extends React.Component {
             });
     }
 
-    var members = this.props.members.map(a => a.email);
-    this.setState({members: members});
+    var admins = this.props.admins.map(a => a.email);
+    this.setState({admins: admins});
     ax.get('/user/_design/user/_view/name')
     .then((result) => {
       var users = [];
       for(var i = 0; i < result.data.rows.length; i++){
         var row = result.data.rows[i];
         var user = row.value;
-        if(!members.includes(user.email)){
+        if(!admins.includes(user.email)){
           var fullname = user.firstname + ' ' + user.lastname;
           var initials = fullname.match(/\b\w/g) || [];
           initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
@@ -117,7 +117,7 @@ export default class SearchUserModal extends React.Component {
         <span onClick={this.toggle}>{this.props.children}</span>
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
         <form onSubmit={this.props.onClick}>
-          <ModalHeader toggle={this.toggle}>Add Members To Group</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Add Admins to Course</ModalHeader>
           <ModalBody>
             <Typography>Search for users by email, name, or username.</Typography>
             <Typography>Your Username can be found in Profile Settings</Typography>
@@ -180,26 +180,35 @@ export default class SearchUserModal extends React.Component {
             {this.state.selected.length > 0 && <Button variant='contained' color="primary"
               onClick={(e) => {
                 var invite = this.state.selected.map(a => a.email);
+                var admins = [];
+                for(var i = 0; i < this.state.selected.length; i++){
+                  var admin = this.state.selected[i];
+                  delete admin.username;
+                  delete admin.identifier;
+                  admins.push(admin);
+                }
                 var fullname = localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname');
-                //Add user to invited list on group page
+                //Add user to admins of course page
                 let that = this;
-                ax.get('/' + 'group' + '/' + this.props.id )
+                ax.get('/' + 'course' + '/' + this.props.id )
                 .then(res => {
-                  var group = res.data;
-                  that.setState({title: group.title});
-                  !group.invited ? group.invited = invite : group.invited = group.invited.concat(invite);
+                  var course = res.data;
+                  that.setState({title: course.title});
+                  !course.admins ? course.admins = admins : course.admins = course.admins.concat(admins);
                   ax({
                     method: 'post',
-                    url: '/group',
+                    url: '/course',
                     data: {
-                      _id: group._id,
-                      _rev: group._rev,
-                      title: group.title,
-                      subject: group.subject,
-                      school: group.school,
-                      members: group.members,
-                      followers: group.followers,
-                      invited: group.invited
+                      _id: course._id,
+                      _rev: course._rev,
+                      title: course.title,
+                      course: course.course,
+                      school: course.school,
+                      professor: course.professor,
+                      admins: course.admins,
+                      students: course.students,
+                      invited: course.invited,
+                      outcomes: course.outcomes
                     }
                   }).then(result => {
                		 var i = 0;
@@ -215,9 +224,9 @@ export default class SearchUserModal extends React.Component {
                         user.notifications.push({
                           id: Date.now(),
                           seen: false,
-                          page: "group",
+                          page: "course",
                           linkID: that.props.id,
-                          phrase: fullname + ' invited you to join ' + that.state.title
+                          phrase: 'You are now an Admin of the following course: ' + that.state.title
                         });
                         ax({
                           method: 'post',
@@ -238,12 +247,12 @@ export default class SearchUserModal extends React.Component {
             							recursiveNotify();
                         });
                       });
-                    }else{that.setState({modal: false});}
+                    }else{window.location.reload();}
                   }
                   recursiveNotify();
                   });
                 });
-              }}>Invite</Button>}
+              }}>Add Admins</Button>}
           </ModalFooter>
         </form>
         </Modal>

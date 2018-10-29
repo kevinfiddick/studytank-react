@@ -26,6 +26,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import CoursesAndOutcomes from "./CoursesAndOutcomes";
 
 const theme = createMuiTheme({
   palette: {
@@ -65,7 +66,9 @@ export default class Note extends React.Component {
     deleted: [],
     files: [],
     uploadingAttachments: false,
-    progress: []
+    progress: [],
+    exclusive: false,
+    courses: {}
   };
 
   isFactChange(e){
@@ -119,6 +122,9 @@ export default class Note extends React.Component {
             var deleteID = deleteIDs[k];
             delete note._attachments[deleteID];
           }
+
+          note.exclusive == undefined ? note.exclusive = false : null;
+          note.courses == undefined ? note.courses = {} : null;
           ax({
              method: 'post',
              url: '/note',
@@ -140,6 +146,8 @@ export default class Note extends React.Component {
                folder: note.folder,
                comments: note.comments,
                rating: note.rating,
+               exclusive: note.exclusive,
+               courses: note.courses,
                _attachments:note._attachments
              }
           }).then(res => {
@@ -231,6 +239,8 @@ export default class Note extends React.Component {
              folder: note.folder,
              comments: note.comments,
              rating: note.rating,
+             exclusive: that.state.exclusive,
+             courses: that.state.courses,
              _attachments:note._attachments
            }
         }).then(res => {
@@ -262,6 +272,8 @@ export default class Note extends React.Component {
            saved: [],
            folder: {},
            comments: [],
+           exclusive: note.exclusive,
+           courses: note.courses,
            rating: {}
          }
       }).then(res => {
@@ -272,6 +284,14 @@ export default class Note extends React.Component {
           }
       });
     }
+  }
+
+  selection(courses){
+    this.setState({courses: courses});
+  }
+
+  exclusive(exclusive){
+    this.setState({exclusive: exclusive});
   }
 
   componentWillMount(){
@@ -300,9 +320,9 @@ export default class Note extends React.Component {
         min = "0" + min;
     today = now.getFullYear() + '-' + month + '-' + day;
     this.setState({  date: today });
+    let that = this;
 
     if(this.props.id){
-      let that = this;
         ax.get('/' + 'note' + '/' + this.props.id).then(result => {
           var note = result.data;
         if(this.state.email == note.author){
@@ -324,6 +344,18 @@ export default class Note extends React.Component {
         }
         }).then(res => {
         });
+    }
+    if(this.props.course){
+        ax.get('/' + 'course' + '/' + this.props.course).then(result => {
+          var course = result.data;
+          that.setState({ subject: course.course });
+          that.setState({ school: course.school });
+          var courses = {};
+          courses[this.props.course] = [];
+          that.setState({ courses: courses});
+        }).then(res => {
+        });
+
     }
   }
 
@@ -416,7 +448,9 @@ export default class Note extends React.Component {
           }
           {this.state.edit &&
             <SimpleMDE value={this.state.content} onChange={this.onContentChange.bind(this)} />
-          }<br />
+          }
+          <CoursesAndOutcomes id={this.props.id} courses={this.state.courses} selection={this.selection.bind(this)} exclusive={this.exclusive.bind(this)} />
+          <br />
               <ConfirmationModal
                 disabled={(this.state.title.length == 0) || (this.state.content.length == 0 && (this.state.files.length == 0 && this.state.attachments.length == 0))}
                 modalHeader="Finishing Touches..."

@@ -47,19 +47,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-const theme = createMuiTheme({
-  palette: {
-	   secondary: {
-	     light: '#00796B',
-	     main: '#FF6F00',
-	     dark: '#E65100',
-	     contrastText: '#fff',
-	   }
-  }
-});
-
 const smallFont = { fontSize: '12px' };
 
 export default class FilterNoteList extends React.Component {
@@ -351,6 +338,8 @@ export default class FilterNoteList extends React.Component {
 							}
 							note.rating = newrating;
 						}
+						note.exclusive == undefined ? note.exclusive = false : null;
+						note.courses == undefined ? note.courses = {} : null;
 						ax({
 							method: 'post',
 							url: '/note',
@@ -372,6 +361,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
 								rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments: note._attachments
 							}
 						}).then(res => {
@@ -407,6 +398,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
+           note.exclusive == undefined ? note.exclusive = false : null;
+           note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -428,6 +421,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
   							rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments:note._attachments
  							}
  						}).then(res => {
@@ -464,6 +459,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
+           note.exclusive == undefined ? note.exclusive = false : null;
+           note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -485,6 +482,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
   							rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments:note._attachments
  							}
  						}).then(res => {

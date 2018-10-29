@@ -119,7 +119,6 @@ export default class FilterNoteList extends React.Component {
                 var grace = 3 * MONTH_IN_MS;
                 localStorage.setItem('expires', Date.now() + grace);
 
-                window.location.replace("/dashboard/notes");
               }
               else{
                 localStorage.clear();

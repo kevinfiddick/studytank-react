@@ -14,19 +14,20 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
+import { sha256 } from './Encoder';
+import email from 'emailjs';
 
-export default class SearchUserModal extends React.Component {
+export default class AddStudentsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
+      professor: '',
       email: '',
       modal: false,
-      search: '',
-      members: [],
-      users: [],
-      suggested: [],
-      selected: []
+      selected: [],
+      students: [],
+      users: []
     };
 
     this.toggle = this.toggle.bind(this);
@@ -38,26 +39,11 @@ export default class SearchUserModal extends React.Component {
     });
   }
 
-  onSearch(e){
-    var search = e.target.value.toLowerCase();
-    this.setState({ search: search });
-    var options = {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      minMatchCharLength: 3,
-      keys: [
-        "email",
-        "firstname",
-        "lastname",
-        "username"
-      ]
-    };
-    var fuse = new Fuse(this.state.users, options); // "list" is the item array
-    var suggested = fuse.search(search);
-    this.setState({ suggested: suggested });
+  onUserInput(e){
+    var userInput = e.target.value.toLowerCase();
+    var userArray = userInput.replace(/\n/g, ",").replace(/\r/g, ",").split(/[\s,]+/);
+    this.setState({ students: userArray });
+
   }
 
   componentDidMount(){
@@ -91,15 +77,15 @@ export default class SearchUserModal extends React.Component {
             });
     }
 
-    var members = this.props.members.map(a => a.email);
-    this.setState({members: members});
+    var students = this.props.students.map(a => a.email);
+    this.setState({students: students});
     ax.get('/user/_design/user/_view/name')
     .then((result) => {
       var users = [];
       for(var i = 0; i < result.data.rows.length; i++){
         var row = result.data.rows[i];
         var user = row.value;
-        if(!members.includes(user.email)){
+        if(!students.includes(user.email)){
           var fullname = user.firstname + ' ' + user.lastname;
           var initials = fullname.match(/\b\w/g) || [];
           initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
@@ -117,20 +103,20 @@ export default class SearchUserModal extends React.Component {
         <span onClick={this.toggle}>{this.props.children}</span>
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
         <form onSubmit={this.props.onClick}>
-          <ModalHeader toggle={this.toggle}>Add Members To Group</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Add Students to Course</ModalHeader>
           <ModalBody>
-            <Typography>Search for users by email, name, or username.</Typography>
-            <Typography>Your Username can be found in Profile Settings</Typography>
+            <Typography>Enter an Email List of Students to add to the Course.</Typography>
+            <Typography>Seperate emails by comma, spaces, or seperate lines.</Typography>
             <TextField
               id="userInput"
-              label="Search for Users"
-              type="search"
+              label="Email List"
+              multiline
               margin="normal"
               className="filter"
-              onChange={this.onSearch.bind(this)}
+              onChange={this.onUserInput.bind(this)}
               fullWidth
               autoComplete='off'
-              value={this.state.search}
+              value={this.state.userInput}
             />
           {this.state.selected.map((selected, i) =>
             <span key={selected.email}>
@@ -149,63 +135,30 @@ export default class SearchUserModal extends React.Component {
             </span>
           )}
 
-            <List>
-          {this.state.suggested.map(suggestion =>
-              <div key={suggestion.email}>
-            <ListItem
-            button
-            onClick={(e) => {
-              var selected = this.state.selected;
-              selected.push(suggestion)
-              this.setState({ selected : selected });
-              this.setState({ search : '' });
-              this.setState({ suggested : [] });
-            }}
-            value={suggestion.email}
-            >
-               <Avatar>
-                 {suggestion.initials}
-               </Avatar>
-               <ListItemText primary={suggestion.firstname + ' ' + suggestion.lastname} secondary={suggestion.identifier} />
-            </ListItem>
-             <li>
-               <Divider inset />
-             </li>
-              </div>
-            )}
-          </List>
           </ModalBody>
           <ModalFooter>
             <Button color="default" onClick={this.toggle}>Cancel</Button>
-            {this.state.selected.length > 0 && <Button variant='contained' color="primary"
+            {this.state.students.length > 0 && <Button variant='contained' color="primary"
               onClick={(e) => {
-                var invite = this.state.selected.map(a => a.email);
-                var fullname = localStorage.getItem('firstname') + ' ' + localStorage.getItem('lastname');
-                //Add user to invited list on group page
+                var emails = this.state.students;
+                var students = [];
+                var invited = [];
+                //Add user to students of course page
                 let that = this;
-                ax.get('/' + 'group' + '/' + this.props.id )
+
+                ax.get('/' + 'course' + '/' + this.props.id )
                 .then(res => {
-                  var group = res.data;
-                  that.setState({title: group.title});
-                  !group.invited ? group.invited = invite : group.invited = group.invited.concat(invite);
-                  ax({
-                    method: 'post',
-                    url: '/group',
-                    data: {
-                      _id: group._id,
-                      _rev: group._rev,
-                      title: group.title,
-                      subject: group.subject,
-                      school: group.school,
-                      members: group.members,
-                      followers: group.followers,
-                      invited: group.invited
-                    }
-                  }).then(result => {
+                  var course = res.data;
+                  that.setState({title: course.title});
+                  that.setState({professor: course.professor});
+                  !course.students ? course.students = students : course.students = course.students.concat(students);
+                  !course.invited ? course.invited = invited : course.invited = course.invited.concat(invited);
                		 var i = 0;
                		 var recursiveNotify = () => {
-               			if(i < invite.length) {
-                      ax.get('/' + 'user' + '/' + invite[i] )
+               			if(i < emails.length) {
+                      var check = course.students.map(a => a.email);
+                      if(!check.includes(emails[i])){
+                      ax.get('/' + 'user' + '/' + emails[i] )
                       .then(rs => {
                         var user = rs.data;
                         if(!user.hasOwnProperty('username')){
@@ -215,9 +168,14 @@ export default class SearchUserModal extends React.Component {
                         user.notifications.push({
                           id: Date.now(),
                           seen: false,
-                          page: "group",
+                          page: "course",
                           linkID: that.props.id,
-                          phrase: fullname + ' invited you to join ' + that.state.title
+                          phrase: 'You have been added to the following course: ' + course.title
+                        });
+                        course.students.push({
+                          email: user.email,
+                          firstname: user.firstname,
+                          lastname: user.lastname
                         });
                         ax({
                           method: 'post',
@@ -237,13 +195,64 @@ export default class SearchUserModal extends React.Component {
             							i++;
             							recursiveNotify();
                         });
+                      })
+                      .catch(er => {
+                        if(emails[i] != '' && emails[i] != null){
+                          const unique = sha256("email:"+emails[i]);
+                          unique.then(function(value){
+                            /*
+                            var server 	= email.server.connect({
+                              user:    "kevinfiddick",
+                              password:"egoFriendly123",
+                              host:    "smtp.zoho.com",
+                              ssl:     true
+                            });
+
+                            // send the message and get a callback with an error or details of the message that was sent
+                            server.send({
+                              text:    "View Class Material, Filter Notes by Course Outcomes, and Share Your Notes with Classmates today!\n\n" +
+                              "We already filled out most of the registration for you! \n"+
+                              "Finish Registeration Here: https://www.studytank.com/quickreg/" + value ,
+                              from:    "StudyTank <kevinfiddick@studytank.com>",
+                              to:      " <"+emails[i]+">",
+                              subject: "You have been enrolled in " + course.title + " on StudyTank.com"
+                            }, function(err, message) { console.log(err || message); });
+                            */
+
+                            var test = course.invited.map(a => a.email);
+                            !test.includes(emails[i]) ? course.invited.push({id: value, email: emails[i]}) : null;
+                            i++;
+                            recursiveNotify();
+                          });
+                        }
                       });
-                    }else{that.setState({modal: false});}
+                    }else{
+                      i++;
+                      recursiveNotify();
+                    }}else{
+                        ax({
+                          method: 'post',
+                          url: '/course',
+                          data: {
+                            _id: course._id,
+                            _rev: course._rev,
+                            title: course.title,
+                            course: course.course,
+                            school: course.school,
+                            professor: course.professor,
+                            admins: course.admins,
+                            students: course.students,
+                            invited: course.invited,
+                            outcomes: course.outcomes
+                          }
+                        }).then(result => {
+                          window.location.reload();
+                        });
+                      }
                   }
                   recursiveNotify();
-                  });
                 });
-              }}>Invite</Button>}
+              }}>Finish</Button>}
           </ModalFooter>
         </form>
         </Modal>

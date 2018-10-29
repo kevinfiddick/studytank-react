@@ -406,6 +406,9 @@ export default class FilterNoteList extends React.Component {
 							}
 							note.rating = newrating;
 						}
+
+						note.exclusive == undefined ? note.exclusive = false : null;
+						note.courses == undefined ? note.courses = {} : null;
 						ax({
 							method: 'post',
 							url: '/note',
@@ -427,6 +430,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
 								rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments: note._attachments
 							}
 						}).then(res => {
@@ -468,6 +473,9 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
+
+           note.exclusive == undefined ? note.exclusive = false : null;
+           note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -489,6 +497,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
   							rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments:note._attachments
  							}
  						}).then(res => {
@@ -526,6 +536,9 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
+
+           note.exclusive == undefined ? note.exclusive = false : null;
+           note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -547,6 +560,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
   							rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments:note._attachments
  							}
  						}).then(res => {
@@ -583,6 +598,9 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
+
+           note.exclusive == undefined ? note.exclusive = false : null;
+           note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -604,6 +622,8 @@ export default class FilterNoteList extends React.Component {
   							folder: note.folder,
   							comments: note.comments,
   							rating: note.rating,
+								exclusive: note.exclusive,
+								courses: note.courses,
   							_attachments:note._attachments
  							}
  						}).then(res => {

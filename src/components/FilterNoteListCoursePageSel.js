@@ -59,7 +59,17 @@ export default class FilterNoteList extends React.Component {
 				field: '',
 				view: 'all',
 				sort: 'abc',
+				selectedItems: [],
+				selectedFolders: [],
+				removeStatus: 'Remove',
+				folderStatus: 'Create Folder',
+				moveStatus: 'Move',
+				folderName: '',
+				moveFolderSelect: '',
 				openFolder: '',
+				newFolder: 'New Folder',
+				keepFolders: true,
+        filter: []
 	};
 
 	/**
@@ -320,6 +330,7 @@ export default class FilterNoteList extends React.Component {
 						var note = result.data;
 						var index = note.saved.indexOf(this.props.id);
 						note.saved.splice(index, 1);
+						delete note.courses[this.props.id];
 						note.folder == undefined ? note.folder = {} : delete note.folder[this.props.id];
 						//Converts note ratings to JSON
 						if(Object.prototype.toString.call(note.rating) === "[object Array]"){
@@ -330,7 +341,6 @@ export default class FilterNoteList extends React.Component {
 							note.rating = newrating;
 						}
 						note.exclusive == undefined ? note.exclusive = false : null;
-						note.courses == undefined ? note.courses = {} : null;
 						ax({
 							method: 'post',
 							url: '/note',
@@ -389,8 +399,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-           note.exclusive == undefined ? note.exclusive = false : null;
-           note.courses == undefined ? note.courses = {} : null;
+					 note.exclusive == undefined ? note.exclusive = false : null;
+					 note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -450,8 +460,8 @@ export default class FilterNoteList extends React.Component {
 						 }
 						 note.rating = newrating;
 					 }
-           note.exclusive == undefined ? note.exclusive = false : null;
-           note.courses == undefined ? note.courses = {} : null;
+					 note.exclusive == undefined ? note.exclusive = false : null;
+					 note.courses == undefined ? note.courses = {} : null;
 						 ax({
  							method: 'post',
  							url: '/note',
@@ -507,71 +517,101 @@ export default class FilterNoteList extends React.Component {
 			keepFoldersChange(e){
 					this.setState({ keepFolders: e.target.checked});
 			}
- /**
-	*	COMP WILL MOUNT
-	*	This function is called when the Compounent is ready to mount
-	* This function will populate the filter list to have the ability to display one of three options:
-	* - All
-	* - UPLOADED NOTES
-	* - BOOKMARKED NOTES
-	*/
+
 	componentDidMount() {
 
 		const email = localStorage.getItem('email');
 		this.setState({email: email});
-		//this code is recursive, only to save space.
-		var iteration = 0;
-
-		const setNotes = () => {
-			ax.get('/' + 'note' + '/_design/dashboard/_view/bookmarked?key=\"' + this.props.id + '\"')
-				.then(res => {
-						const viewArray = res.data.rows;
-
-						for(var i = 0; i < viewArray.length; i++){
-							var note = viewArray[i];
-							note.value.field = "";
-							//Converts note ratings to JSON
-
-							if(Object.prototype.toString.call(note.value.rating) === "[object Array]"){
-								var newrating = {};
-								for(var j = 0; j < note.value.rating.length; j++){
-									newrating[note.value.rating[j].uniqueID] = note.value.rating[j].rating;
-								}
-								note.value.rating = newrating;
-							}
-							if(note.value.folder != undefined){
-									var folders = this.state.folders;
-									var folder = note.value.folder[this.props.id];
-									if(folder == '' || folder == undefined){
-										folder = this.props.id;
-									}
-									if(!folders.includes(folder)){
-										folders.push(folder);
-										folders = orderBy(folders, [folder => folder.toLowerCase()]);
-										this.setState({ folders: folders });
-									}
-									note.value.folder[this.props.id] = folder;
-							}
-							else{
-								note.value.folder = {};
-								note.value.folder[this.props.id] = this.props.id;
-							}
-							viewArray[i] = note;
-						}
-
-						var itemsArray = this.state.items;
-						itemsArray.push.apply(itemsArray, viewArray);
-
-						itemsArray = orderBy(itemsArray, [note => note.value.title.toLowerCase()]);
-						this.setState({ items: itemsArray });
-						this.setState({ filteredItems: itemsArray });
-						this.setState({ sortedItems: itemsArray });
-			});
-		}
-				setNotes();
+    this.setState({ filter: this.props.filter });
+		this.setNotes();
 
 	}
+  componentWillReceiveProps(nextProps) {
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if (!this.isEqual(nextProps.filter, this.state.filter)) {
+			var filterArray = [];
+			filterArray = filterArray.concat(nextProps.filter);
+      this.setState({ filter: filterArray });
+			this.setNotes();
+    }
+  }
 
+	isEqual(a, b){
+		if (a === b) return true;
+  	if (a == null || b == null) return false;
+  	if (a.length != b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  	for (var i = 0; i < a.length; ++i) {
+    	if (a[i] !== b[i]) return false;
+  	}
+  	return true;
+	}
+
+	diff(arr1, arr2){
+		var ret = [];
+		for(var i in arr1) {
+				if(arr2.indexOf(arr1[i]) > -1){
+						ret.push(arr1[i]);
+				}
+		}
+		return ret;
+	}
+	setNotes(){
+		this.setState({ folders: [] });
+
+		this.setState({ items: [] });
+		this.setState({ filteredItems: [] });
+		this.setState({ sortedItems: [] });
+		ax.get('/' + 'note' + '/_design/course/_view/outcomes?key="' + this.props.id + '"')
+			.then(res => {
+					const viewArray = res.data.rows;
+
+					for(var i = 0; i < viewArray.length; i++){
+						var note = viewArray[i];
+						if(this.state.filter.length == 0 || this.diff(this.state.filter, note.value.outcomes).length > 0){
+						note.value.field = "";
+						//Converts note ratings to JSON
+
+						if(Object.prototype.toString.call(note.value.rating) === "[object Array]"){
+							var newrating = {};
+							for(var j = 0; j < note.value.rating.length; j++){
+								newrating[note.value.rating[j].uniqueID] = note.value.rating[j].rating;
+							}
+							note.value.rating = newrating;
+						}
+						if(note.value.folder != undefined){
+								var folders = this.state.folders;
+								var folder = note.value.folder[this.props.id];
+								if(folder == '' || folder == undefined){
+									folder = this.props.id;
+								}
+								if(!folders.includes(folder)){
+									folders.push(folder);
+									folders = orderBy(folders, [folder => folder.toLowerCase()]);
+									this.setState({ folders: folders });
+								}
+								note.value.folder[this.props.id] = folder;
+						}
+						else{
+							note.value.folder = {};
+							note.value.folder[this.props.id] = this.props.id;
+						}
+						viewArray[i] = note;
+						}
+					}
+
+					var itemsArray = orderBy(viewArray, [note => note.value.title.toLowerCase()]);
+
+					this.setState({ items: itemsArray });
+					this.setState({ filteredItems: itemsArray });
+					this.setState({ sortedItems: itemsArray });
+		});
+	}
 
 	/**
 	 *	RENDER
@@ -622,12 +662,265 @@ export default class FilterNoteList extends React.Component {
 				<Row>
 					<Col md={{ size: 8, offset: 2 }} xs={{ size: 12, offset: 0 }}>
             <br/>
+					  <AppBar
+							position="static"
+							color="default"
+							elevation= {0}
 
+						>
+							<Tabs
+								fullWidth
+								indicatorColor="secondary"
+								centered
+							>
+
+							<ConfirmationModal
+                disabled={!(this.state.selectedItems.length > 0)}
+								modalHeader="Perminantly Remove?"
+								message=
+								{<div><p>Are you sure you want to perminantly remove the following notes?</p>
+                <p>We recommend you consult your Group Members first, as this action cannot be undone. </p>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+										}
+									</Row>
+								)}
+											</div>
+								}
+								onClick={this.onRemoveItems.bind(this)}
+								confirm={this.state.removeStatus}
+							>
+								<Tab
+									icon={<RemoveIcon />}
+									className="darklink"
+									label="Remove"
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+							</ConfirmationModal>
+							<ConfirmationModal
+                disabled={!(this.state.selectedItems.length > 0)}
+								modalHeader={this.state.newFolder}
+								message=
+								{<div>
+									<TextField
+										required
+										autoFocus
+			          		id="folderName"
+			          		label={this.state.newFolder}
+					          type="input"
+										margin="normal"
+										className="filter"
+										fullWidth
+										autoComplete='off'
+										onChange={this.onFolderNameChange.bind(this)}
+          					InputProps={{
+            					startAdornment: <InputAdornment position="start"><NewFolderIcon /></InputAdornment>,
+          					}}
+			        		/>
+								<br/>
+								<p>This <b>folder</b> will contain:</p>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+										}
+									</Row>
+								)}
+											</div>
+								}
+								onClick={this.onNewFolder.bind(this)}
+								confirm={this.state.folderStatus}
+							>
+								<Tab
+									icon={<NewFolderIcon />}
+									className="darklink"
+									label={this.state.newFolder}
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+						</ConfirmationModal>
+						<ConfirmationModal
+              disabled={!(this.state.selectedItems.length > 0)}
+							modalHeader="Move Items"
+							message=
+							{<div>
+									<p>Select Which Folder To Move Items Into:</p>
+										{this.state.folders.map(title =>
+											<div key={title}> {title != this.props.id &&
+											<Row>
+											<Col xs={{ size: 1 }}>
+												<FormControlLabel
+													control={
+														<Checkbox
+
+															color="default"
+															id={title}
+															checked={this.state.moveFolderSelect == title}
+															onChange={this.onMoveFolderSelected.bind(this)}
+														/>
+													}
+												/>
+											</Col>
+											<Col xs={{ size: 11 }}>
+											<MUIButton
+												variant="contained"
+												color="primary"
+												fullWidth
+												classes={{
+													root: 'button',
+													label: 'buttonLabel'
+												}}
+												onClick={(e) => {
+													this.setState({ moveFolderSelect: {title}.title.toLowerCase()});
+												}}
+
+											>
+											<span className='buttonLabel' >
+												<FolderIcon />
+												<span>
+													{title} <br/>
+												</span></span>
+											</MUIButton>
+										</Col>
+									</Row>}
+									</div>
+									)}
+									<div key={this.props.id}>
+									<Row>
+									<Col xs={{ size: 1 }}>
+										<FormControlLabel
+											control={
+												<Checkbox
+
+													color="default"
+													id={this.props.id}
+													checked={this.state.moveFolderSelect == this.props.id}
+													onChange={this.onMoveFolderSelected.bind(this)}
+												/>
+											}
+										/>
+									</Col>
+									<Col xs={{ size: 11 }}>
+									<MUIButton
+										variant="outlined"
+										color="primary"
+										fullWidth
+										classes={{
+											root: 'button',
+											label: 'buttonLabel'
+										}}
+										onClick={(e) => {
+											this.setState({ moveFolderSelect: this.props.id});
+										}}
+
+									>
+									<span className='buttonLabel' >
+										<span>
+											No Folder
+										</span></span>
+									</MUIButton>
+								</Col>
+							</Row>
+							</div>
+							<ExpansionPanel>
+        				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          				<Typography>See Selected Items</Typography>
+        				</ExpansionPanelSummary>
+        				<ExpansionPanelDetails>
+								<Col xs={{ size: 12 }}>
+									{this.state.items.map(item =>
+										<Row key={item.id}>
+										{this.state.selectedItems.includes(item.id) &&
+										<MUIButton
+											variant="outlined"
+											color="primary"
+											fullWidth
+											classes={{
+												root: 'button',
+												label: 'buttonLabel'
+											}}
+
+										>
+										<span className='buttonLabel' >
+											<NoteIcon /> {' '}
+											<span>
+												{item.value.title} <br/>
+												{this.state.field} {item.value.field}
+											</span></span>
+										</MUIButton>
+											}
+										</Row>
+									)}
+								</Col>
+        				</ExpansionPanelDetails>
+      				</ExpansionPanel>
+
+								</div>
+							}
+							onClick={this.onMoveToFolder.bind(this)}
+							confirm={this.state.moveStatus}
+						>
+								<Tab
+									icon={<MoveIcon />}
+									className="darklink"
+									label="Move"
+                  disabled={!(this.state.selectedItems.length > 0)}
+								/>
+						</ConfirmationModal>
+							</Tabs>
+						</AppBar>
+			<br/>
 					<ul>
 						{this.state.folders.map(title =>
 							<div key={title}> {title != this.props.id &&
 							<Row>
-							<Col xs={{ size: 12 }}>
+							<Col xs={{ size: 1 }}>
+								<FormControlLabel
+									control={
+										<Checkbox
+
+											color="default"
+											id={title}
+											checked={this.state.selectedFolders.includes(title)}
+											onChange={this.onSelectedFolder.bind(this)}
+										/>
+									}
+								/>
+							</Col>
+							<Col xs={{ size: 11 }}>
 							<MUIButton
 								variant={this.state.openFolder == title ? "outlined" : "contained"}
 								color="primary"
@@ -657,7 +950,20 @@ export default class FilterNoteList extends React.Component {
 									<div key={item.id}>
 										{item.value.folder[this.props.id] == title &&
 											<Row>
-											<Col xs={{ size: 11 }}>
+											<Col xs={{ size: 1 }}>
+												<FormControlLabel
+		          						control={
+		            						<Checkbox
+
+		              						color="default"
+															id={item.id}
+															checked={this.state.selectedItems.includes(item.id)}
+															onChange={this.onSelectedItem.bind(this)}
+		            						/>
+		          						}
+		        						/>
+											</Col>
+											<Col xs={{ size: 10 }}>
 											<MUIButton
 												variant="outlined"
 												color="primary"
@@ -689,7 +995,20 @@ export default class FilterNoteList extends React.Component {
 							<div key={item.id}>
 								{item.value.folder[this.props.id] == this.props.id &&
 									<Row>
-									<Col xs={{ size: 12 }}>
+									<Col xs={{ size: 1 }}>
+										<FormControlLabel
+          						control={
+            						<Checkbox
+
+              						color="default"
+													id={item.id}
+													checked={this.state.selectedItems.includes(item.id)}
+													onChange={this.onSelectedItem.bind(this)}
+            						/>
+          						}
+        						/>
+									</Col>
+									<Col xs={{ size: 11 }}>
 									<MUIButton
 										variant="outlined"
 										color="primary"

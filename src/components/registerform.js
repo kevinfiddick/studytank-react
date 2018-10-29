@@ -11,6 +11,7 @@ import TermsAndConditions from './TermsAndConditions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {Alert} from "reactstrap";
+import email from 'emailjs';
 
 export default class RegisterForm extends React.Component {
 
@@ -20,11 +21,16 @@ export default class RegisterForm extends React.Component {
           firstname: '',
           lastname: '',
           email: '',
+          og: '',
           school: '',
           passwordInput: '',
           confirmPasswordInput: '',
           checkBox: false,
-          errorStatus: ''
+          errorStatus: '',
+          invited: [],
+          confirmation: '',
+          confirm: false,
+          confirmInput: ''
         };
     }
     onChange = (e) => {
@@ -40,31 +46,122 @@ export default class RegisterForm extends React.Component {
         this.setState({ [e.target.value]: e.target.checked });
     }
 
-    onSubmit = (e) => {
-        this.setState({ errorStatus: ''});
-        e.preventDefault();
-        // get our form data out of state
-        const user = this.state;
-        let that = this
+    makeid() {
 
-        if(user.passwordInput === user.confirmPasswordInput){
-          sha256(user.passwordInput).then(function(value){
-            user.password = value;
-            // Send a PUT request
-            const register = () => {
-            ax({
-              method: 'put',
-              url: '/user/'+user.email,
-              data: {
-                email: user.email,
-                username: user.username,
-                password: user.password,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                school: user.school,
-                notifications: []
+      this.setState({ confirm: true });
+      if(this.state.confirmation.length !== 5){
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        this.setState({ confirmation: text });
+      }
+
+      /*
+      var server 	= email.server.connect({
+        user:    "kevinfiddick",
+        password:"egoFriendly123",
+        host:    "smtp.zoho.com",
+        ssl:     true
+      });
+
+      // send the message and get a callback with an error or details of the message that was sent
+      server.send({
+        text:    "Welcome To StudyTank! \n\n Finish your registration by using this code: \n\n" + this.state.confirmation ,
+        from:    "StudyTank <kevinfiddick@studytank.com>",
+        to:      this.state.firstname + " <"+this.state.email+">",
+        subject: "StudyTank Email Confirmation"
+      }, function(err, message) { console.log(err || message); });
+      */
+
+      return text;
+    }
+
+    confirm(){
+      if(this.state.confirmation == this.state.confirmInput){
+        this.register();
+      }
+      else{
+        this.setState({ errorStatus: "The Confirmation Code You Entered was Incorrect"});
+      }
+    }
+
+    register(){
+    // get our form data out of state
+    const user = this.state;
+    let that = this;
+
+      sha256(user.passwordInput).then(function(value){
+        user.password = value;
+
+        const generateUsername = (counter) => {
+          var username = user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase() + '-' + counter;
+          ax.get('/user/_design/user/_view/username?key="' + username + '"')
+          .then((result) => {
+            if(result.data.rows.length > 0 ){
+              generateUsername(counter+1)
+            }else{
+              user.username = username;
+          ax({
+            method: 'put',
+            url: '/user/'+user.email,
+            data: {
+              email: user.email,
+              username: user.username,
+              password: user.password,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              school: user.school,
+              confirmed: user.confirmed,
+              notifications: []
+            }
+          }).then((result) => {
+
+            ax.get('/' + 'course' + '/' + '_design/invited/_view/email?key="'+user.email+'"')
+            .then(res => {
+              var i = 0;
+              const reCourse = () => {
+              if( i < res.data.rows.length ){
+                var course = res.data.rows[i].value;
+                //remove newly registered student from invited list
+                course.invited.splice(course.invited.indexOf(course.invited.find(function(element) {
+                  return element.email == user.email;
+                })), 1);
+                //add newly registered student to student list if not there already
+                var check = course.students.map(a => a.email);
+                if(!check.includes(user.email)){
+                  course.students.push({
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname
+                  });
+                }
+                    ax({
+                      method: 'post',
+                      url: '/course',
+                      data: {
+                        _id: course._id,
+                        _rev: course._rev,
+                        title: course.title,
+                        course: course.course,
+                        school: course.school,
+                        professor: course.professor,
+                        admins: course.admins,
+                        students: course.students,
+                        invited: course.invited,
+                        outcomes: course.outcomes
+                      }
+                    }).then(result => {
+                      i++;
+                      reCourse();
+                    });
               }
-            }).then((result) => {
+              else{
+              window.location.replace("/dashboard/notes");}
+              }
+
               localStorage.setItem('email', user.email);
               localStorage.setItem('password', user.password);
               localStorage.setItem('firstname', user.firstname);
@@ -75,35 +172,47 @@ export default class RegisterForm extends React.Component {
               const MONTH_IN_MS = 2678400000;
               var grace = 3 * MONTH_IN_MS;
               localStorage.setItem('expires', Date.now() + grace);
-              window.location.replace("/dashboard/notes");
-            }).catch(function (error) {
-              if(error.status == 409){
-                that.setState({ errorStatus: "A user is already registered under " + user.email});
-                window.location.replace("/login");
-              } else{
-                that.setState({ errorStatus: "An error occured, please try again later."});
-              }
+              reCourse();
+            })
+            .catch(c => {
             });
-            }
-            const generateUsername = (counter) => {
-              var username = user.firstname.trim().replace(/\s/g,'-').toLowerCase() + '-' + user.lastname.trim().replace(/\s/g,'-').toLowerCase() + '-' + counter;
-              ax.get('/user/_design/user/_view/username?key="' + username + '"')
-              .then((result) => {
-                if(result.data.rows.length > 0 ){
-                  generateUsername(counter+1)
-                }else{
-                  user.username = username;
-                  register();
-                }
-              });
-            }
-            generateUsername(1);
-
+          }).catch(function (error) {
+              that.setState({ errorStatus: "An error occured, please try again later."});
           });
         }
-        else{
-          this.setState({ errorStatus: "Your passwords do not match"});
+          });
         }
+
+        generateUsername(1);
+      });
+    }
+
+    onSubmit = (e) => {
+        this.setState({ errorStatus: ''});
+        e.preventDefault();
+        const user = this.state;
+        let that = this;
+        ax.get('/user/_design/user/_view/exists?key="' + this.state.email + '"')
+        .then((result) => {
+          if(result.data.rows.length > 0 ){
+            that.setState({ errorStatus: "A user is already registered under " + user.email});
+          }else{
+            if(user.passwordInput === user.confirmPasswordInput){
+
+                var confirmed = (that.state.email == that.state.og);
+                if(confirmed){
+                  that.register();
+                }
+                else{
+                  that.makeid();
+                }
+
+              }
+              else{
+                this.setState({ errorStatus: "Your passwords do not match"});
+              }
+            }
+          });
     }
 
     componentWillMount(){
@@ -113,6 +222,28 @@ export default class RegisterForm extends React.Component {
       var grace = 3 * MONTH_IN_MS;
       var email = '';
       var password = '';
+      console.log(this.props.id);
+      if(this.props.id != '' && this.props.id != null){
+        let that = this;
+      ax.get('/' + 'course' + '/' + '_design/invited/_view/id?key="'+this.props.id+'"')
+        .then(res => {
+          console.log(res);
+          if(res.data.rows.length > 0 ){
+            that.setState({invited: res.data.rows.map(a => a.value)});
+            var course = res.data.rows[0].value;
+            var student = course.invited.find(function(element) {
+              return element.id == that.props.id;
+            });
+            that.setState({email: student.email});
+            that.setState({og: student.email});
+            that.setState({school: course.school});
+          }
+        })
+        .catch(c => {
+        });
+
+      }
+
       //save local storage email and password for easy access
       try{
           email = localStorage.getItem("email");
@@ -140,6 +271,8 @@ export default class RegisterForm extends React.Component {
             return (
               <div className="div">
                 <Paper className="root" elevation={1}>
+                  {!this.state.confirm &&
+                  <div>
                   <Typography variant='headline' component='h1'>
                     Register
                   </Typography>
@@ -148,6 +281,7 @@ export default class RegisterForm extends React.Component {
                       required
                       id='firstname'
                       onChange={this.onChange}
+                      value={this.state.firstname}
                       label='First Name'
                       className="joinedtextField"
                       margin='normal'
@@ -156,6 +290,7 @@ export default class RegisterForm extends React.Component {
                       required
                       id='lastname'
                       onChange={this.onChange}
+                      value={this.state.lastname}
                       label='Last Name'
                       className="joinedtextField"
                       margin='normal'
@@ -165,6 +300,7 @@ export default class RegisterForm extends React.Component {
                       required
                       id='email'
                       onChange={this.onChange}
+                      value={this.state.email}
                       label='Email'
                       className="textField"
                       margin='normal'
@@ -173,6 +309,7 @@ export default class RegisterForm extends React.Component {
                     <TextField
                       id='school'
                       onChange={this.onChange}
+                      value={this.state.school}
                       label='School of Attendance'
                       className="textField"
                       margin='normal'
@@ -224,6 +361,32 @@ export default class RegisterForm extends React.Component {
                     </Button>
                   </form>
                   <Link to='/login'>Already Have An Account? Log In</Link>
+                  </div>}
+
+                  {this.state.confirm &&
+                    <div>
+                    {this.state.errorStatus != '' &&
+                      <Alert color="danger">
+                        {this.state.errorStatus.split('\n').map((item, i) => <div key={i}>{item}</div>)}
+                      </Alert>
+                    }
+                    <Typography variant='headline' component='h1'>
+                      {'Check your email : ' + this.state.email}
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      id='confirmInput'
+                      onChange={this.onChange}
+                      value={this.state.confirmInput}
+                      label='Confirmation Code'
+                      className="textField"
+                      margin='normal'
+                      />
+                    <Button onClick={this.confirm.bind(this)} variant='outlined' color='primary' className="button">
+                    Confirm
+                  </Button>
+                  </div>
+                  }
                 </Paper>
                 <br/>
                 <br/>
