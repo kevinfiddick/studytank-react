@@ -44,9 +44,7 @@ export default class AddStudentsModal extends React.Component {
 
   componentDidMount(){
     var email = localStorage.getItem('email');
-    this.setState({email: email});
-
-    emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
+    this.setState({email: email});]
 
     let that = this;
     if(localStorage.getItem('firstname') == '' || localStorage.getItem('firstname') == null ){
@@ -210,7 +208,7 @@ export default class AddStudentsModal extends React.Component {
 
                             var service_id = "zoho";
                             var template_id = "register";
-                            emailjs.send(service_id,template_id,template_params);
+                            window.emailjs.send(service_id,template_id,template_params);
 
 
                             var test = course.invited.map(a => a.email);

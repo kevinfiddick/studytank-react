@@ -55,7 +55,7 @@ export default class ResetForm extends React.Component {
 
           var service_id = "zoho";
           var template_id = "password_reset";
-          emailjs.send(service_id,template_id,template_params);
+          window.emailjs.send(service_id,template_id,template_params);
 
           that.setState({ sent: true });
         }else{
@@ -118,8 +118,6 @@ export default class ResetForm extends React.Component {
     }
 
     componentWillMount(){
-
-      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
     }
 
     render() {

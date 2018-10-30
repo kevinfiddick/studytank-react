@@ -161,7 +161,7 @@ export default class CreateCourseForm extends React.Component {
 
                    var service_id = "zoho";
                    var template_id = "register";
-                   emailjs.send(service_id,template_id,template_params);
+                   window.emailjs.send(service_id,template_id,template_params);
 
                    var test = course.invited.map(a => a.email);
                    if(!test.includes(emails[i])) course.invited.push({id: value, email: emails[i]});
@@ -203,8 +203,6 @@ export default class CreateCourseForm extends React.Component {
     componentDidMount(){
       this.setState({ id: Date.now() });
 
-      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
-      
       this.setState({ email: localStorage.getItem('email')});
         var outcomes = [];
         outcomes = outcomes.concat(this.state.outcomes);

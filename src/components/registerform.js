@@ -11,7 +11,7 @@ import TermsAndConditions from './TermsAndConditions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {Alert} from "reactstrap";
-import emailjs from 'emailjs-com';
+import emailjs from 'import emailjs from 'emailjs-com';-com';
 
 export default class RegisterForm extends React.Component {
 
@@ -66,7 +66,7 @@ export default class RegisterForm extends React.Component {
 
       var service_id = "zoho";
       var template_id = "confirmation_email";
-      emailjs.send(service_id,template_id,template_params);
+      window.emailjs.send(service_id,template_id,template_params);
 
       return text;
     }
@@ -208,8 +208,6 @@ export default class RegisterForm extends React.Component {
     }
 
     componentWillMount(){
-
-      emailjs.init('user_IIXSfQkpkB9MvfzqwbBLk');
       //checks if localStorage is expired
       const MONTH_IN_MS = 2678400000;
       var expiration = 0;
