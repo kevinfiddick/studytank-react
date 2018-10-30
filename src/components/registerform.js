@@ -11,7 +11,7 @@ import TermsAndConditions from './TermsAndConditions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {Alert} from "reactstrap";
-import emailjs from 'import emailjs from 'emailjs-com';-com';
+import emailjs from 'emailjs-com';
 
 export default class RegisterForm extends React.Component {
 
