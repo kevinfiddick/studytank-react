@@ -44,7 +44,7 @@ export default class AddStudentsModal extends React.Component {
 
   componentDidMount(){
     var email = localStorage.getItem('email');
-    this.setState({email: email});]
+    this.setState({email: email});
 
     let that = this;
     if(localStorage.getItem('firstname') == '' || localStorage.getItem('firstname') == null ){
